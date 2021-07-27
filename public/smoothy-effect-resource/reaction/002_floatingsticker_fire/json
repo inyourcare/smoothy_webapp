@@ -1,0 +1,27 @@
+{
+    "stickerList": [{
+        "type": "floating",
+        "centerIndexList": [98,102],
+        "offsetX": 0.0,
+        "offsetY": 0.0,
+        "baseScale": 0.3,
+        "startIndex": 82,
+        "endIndex": 83,
+        "width": 200,
+        "height": 200,
+        "frames": 1,
+        "action": 0,
+        "stickerName": "fire",
+        "duration": 100,
+        "stickerLooping": 1,
+        "maxcount": 5,
+	"particleMaxCount": 50,
+	"particleInterval": 100,
+	"buildInTime": 400,
+	"accelerationY": 2.0,
+	"velocity": 2.0,
+	"velocityDecay": 0.4,
+	"angleRandomization": 5.0,
+	"intervalRandomization": 0.0
+    }]
+}

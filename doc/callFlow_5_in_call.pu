@@ -1,0 +1,37 @@
+@startuml
+
+skinparam Shadowing false
+title Smoothy Call Flow: In Call
+
+actor User as U
+participant Client1 as C1
+participant Server as S
+database DB
+participant Twilio as T
+participant Client2 as C2
+
+==통화 중==
+T -> C1++: onVideoTrackEnabled/Disabled
+C1 -> U: 친구 영상 켬/끔
+deactivate C1
+T -> C1++: onAudioTrackEnabled/Disabled
+C1 -> U: 친구 소리 켬/끔 표시
+deactivate C1
+DB -> C1++: party_members>speaker true/null
+C1 -> U: 친구 스피커 켬/끔 표시
+deactivate C1
+C1 -> DB: 내 상태 변화 시 party_members>video (1/3), \naudio (true/null), speaker (true/null) 업데이트
+
+DB -> C1++: party_members>status 2
+alt 소리 켜져 있으면
+C1 -> U: 친구 음성 통화 중 표시
+else 소리 꺼져 있으면
+C1 -> U: 친구 자리 비움 표시
+end
+deactivate C1
+DB -> C1++: party_members>status 4
+C1 -> U: 친구 일반 상태 표시
+deactivate C1
+C1 -> DB: 내 상태 변화 시 party_members>status (2/4) 업데이트
+
+@enduml

@@ -1,0 +1,25 @@
+{
+    "stickerList": [{
+        "type": "sticker",
+        "stickerName": "bar",
+        "rotate2D": "",
+        "centerIndexList": [43],
+        "width": 600,
+        "height": 70,
+        "baseScale": 1.58,
+        "startIndex": 6,
+        "endIndex": 26,
+        "frames": 1,
+        "duration": 250,
+        "offsetX": 0,
+        "offsetY": 0,
+        "offsetZ": -0.1,
+        "lut": "img_lut_018_urban3s",
+        "isFront": false,
+        "action": 0,
+        "stickerLooping": 1,
+        "audioPath": "",
+        "audioLooping": 0,
+        "maxcount": 5
+    }]
+}

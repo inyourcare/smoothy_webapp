@@ -1,0 +1,17 @@
+{
+  "hosting": [{
+    "target": "smoothy-build",
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/redirected/**",
+        "destination": "/index.html"
+      }
+    ]
+  }]
+}

@@ -1,0 +1,48 @@
+@startuml
+
+skinparam Shadowing false
+title Sign Up Flow: 2. 로그인 시 데이터 초기화
+
+actor User as U
+participant Client as C1
+participant Server as S
+database DB
+participant FirebaseAuth as F
+
+==로그인 후==
+
+opt 계정 최초 생성 시
+    F->S: onCreate
+    activate S
+    S->S: photoUri를 다운받아 \n스토리지에 올리고 이 Uri를 이용
+    note right: 현재는 없는 과정
+    S->DB: Profile 생성(key, nickname, photoUriString, \nbackgroundColorIndex, textColorIndex, timestamp)
+    activate DB
+    note right: nickname과 photoUriString은 없는 경우가 있음
+    S->DB: Friend:Me 생성(key, status)
+    note right: 클라이언트에서 안 쓰는지 확인하고 없앨 것
+    S->DB: RDB Profile 생성(uid, os, language, country, \nrefuse_campaign_push)
+    deactivate S
+end
+
+DB->C1: Profile observe
+deactivate DB
+
+opt 소셜 로그인 실행 시
+    opt Profile에 nickname이 없을 경우
+        C1->C1: Provider에서 받아온 nickname 이용
+    end
+    opt Profile에 photoUri가 없을 경우
+        C1->C1: Provider에서 받아온 photoUri 또는 랜덤 기본 이미지 이용
+    end
+    opt Provider == Apple인 경우
+        C1->C1: Provider에서 받아온 이메일 이용
+    end    
+    C1->S: updateUserWithProviderInfo(nickname, photoUri, email)
+    note right: 현재는 없는 과정
+    S->S: photoUri를 다운받아 \n스토리지에 올리고 이 Uri를 이용
+    S->DB: Profile 업데이트(nickname, photoUriString)
+    S->F: updateEmail(email)
+end
+
+@enduml

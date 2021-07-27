@@ -1,0 +1,25 @@
+{
+    "stickerList": [{
+        "type": "sticker",
+        "stickerName": "glasses",
+        "rotate2D": "",
+        "centerIndexList": [43],
+        "width": 600,
+        "height": 300,
+        "baseScale": 1.58,
+        "startIndex": 6,
+        "endIndex": 26,
+        "frames": 30,
+        "duration": 80,
+        "offsetX": 0,
+        "offsetY": 0,
+        "offsetZ": 0.1,
+        "lut": "img_lut_006_foodie02s",
+        "isFront": false,
+        "action": 0,
+        "stickerLooping": 1,
+        "audioPath": "",
+        "audioLooping": 0,
+        "maxcount": 5
+    }]
+}

@@ -1,0 +1,25 @@
+{
+    "stickerList": [{
+        "type": "sticker",
+        "stickerName": "glasses",
+        "rotate2D": "",
+        "centerIndexList": [43],
+        "width": 600,
+        "height": 300,
+        "baseScale": 1.58,
+        "startIndex": 6,
+        "endIndex": 26,
+        "frames": 48,
+        "duration": 80,
+        "offsetX": 0,
+        "offsetY": 0.06,
+        "offsetZ": "",
+        "lut": "img_lut_022_zephyr5stp",
+        "isFront": false,
+        "action": 0,
+        "stickerLooping": 1,
+        "audioPath": "",
+        "audioLooping": 0,
+        "maxcount": 5
+    }]
+}

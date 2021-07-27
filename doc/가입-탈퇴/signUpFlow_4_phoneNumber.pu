@@ -1,0 +1,54 @@
+@startuml
+
+skinparam Shadowing false
+title Sign Up Flow: 4. 전화번호 인증
+
+actor User as U
+participant Client as C1
+participant Server as S
+database DB
+participant Sinch as SC
+participant FirebaseAuth as F
+
+==로그인 후 Auth에 전화번호가 없을 때==
+
+group 국가 목록 설정
+C1->C1: Sinch 유틸로 현재 Locale로 된 국가 목록을 받아옴
+C1->C1: 국가명 스트링 정렬 후 현재 국가를 제일 앞으로
+C1->C1: 국기 이모지: 127397 + isoCountryCode.unicodeScalars
+end
+
+U->C1: 전화번호 입력
+activate C1
+C1->C1: Sinch 유틸로 parsing 및 e164 포맷팅
+C1->SC: SMSVerification.initiate(phoneNumber)
+deactivate C1
+activate SC
+SC->U: 인증번호 SMS
+deactivate SC
+
+U->C1: 3분 내 인증번호 입력
+activate C1
+C1->SC: SMSVerification.verify(인증번호)
+deactivate C1
+activate SC
+SC->C1: result
+deactivate SC
+activate C1
+
+C1->S: onPhoneNumberLink_v2(uid, phoneNumber)
+deactivate C1
+activate S
+group 다른 사용자에게서 번호 삭제
+S->F: phoneNumber로 원주인 조회 후 번호 제거
+S->DB: Profile에서 phoneNumber 제거
+S->DB: Phone_relation에서 본인 key, timestamp 제거
+end
+group 본인에게 번호 추가
+S->F: updateUser(phoneNumber)
+S->DB: Profile 업데이트(phoneNumber)
+S->DB: Phone_relation 업데이트(key, timestamp)
+end
+deactivate S
+
+@enduml

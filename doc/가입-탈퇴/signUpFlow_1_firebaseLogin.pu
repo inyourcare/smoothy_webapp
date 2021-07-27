@@ -1,0 +1,51 @@
+@startuml
+
+skinparam Shadowing false
+title Sign Up Flow: 1. 파이어베이스 로그인
+
+actor User as U
+participant Client as C1
+participant Server as S
+database DB
+participant Provider as P
+participant FirebaseAuth as F
+
+U -> C1: SignIn Provider별 버튼 클릭
+
+alt Google
+    C1->P: GIDSignIn.signIn
+    activate P
+else Facebook
+    C1->P: LoginManager.logIn
+else Kakao (카카오톡 설치 시)
+    C1->P: UserApi.loginWithKakaoTalk
+else Kakao (카카오톡 미설치 시)
+    C1->P: UserApi.loginWithKakaoTalkAccount
+else Apple
+    C1->P: ASAuthorizationController.performRequests
+end
+
+return token
+
+alt Google, Facebook, Apple
+    rnote over C1: token으로 credential 취득
+    C1->F++: signInWith(credential)
+    return results
+else Kakao
+    C1->S++: getKakaoCredential(token)
+    return firebaseToken
+    C1->F++: signInWithCustomToken(firebaseToken)
+    return result
+end
+
+alt result == Success
+    opt 이전에 익명 로그인 상태였을 경우
+        C1->S: removeUserHttp(prevUid)
+    end
+else result == Fail
+    opt Firebase SignIn Error 시
+        rnote over C1: Provider별 SignOut 루틴: \nGIDSignIn.signOut \nLoginManager.logOut \nUserApi.logout \n(Apple은 따로 없음)  
+    end
+end
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+
+skinparam Shadowing false
+title Smoothy Call Flow: Friend Disconnect
+
+actor User as U
+participant Client1 as C1
+participant Server as S
+database DB
+participant Twilio as T
+participant Client2 as C2
+
+==친구 연결 종료==
+C2 <-]: X 버튼
+activate C2
+C2 -> DB: party_member>member 에서 본인 제거
+activate DB
+DB -> C1: 옵저브
+deactivate DB
+activate C1
+C1 -> U: 친구 셀 제거
+deactivate C1
+
+C2 -> T: disconnect(partyId)
+deactivate C2
+activate T
+T -> C1: onAudioTrackUnsubscribed
+activate C1
+C1 -> U: 친구 소리 꺼짐
+deactivate C1
+T -> C1: onVideoTrackUnsubscribed
+activate C1
+C1 -> U: 친구 영상 꺼짐
+deactivate C1
+
+alt 친구가 나보다 빨리 나감
+T -> C1: onParticipantDisconnected
+deactivate T
+else 친구가 나보다 늦게 나감
+rnote over C1: 안 불림. onDisconnected 시의 정보를 이용
+end
+
+@enduml

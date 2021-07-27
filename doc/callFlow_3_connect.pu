@@ -1,0 +1,36 @@
+@startuml
+
+skinparam Shadowing false
+title Smoothy Call Flow: Connect
+
+actor User as U
+participant Client1 as C1
+participant Server as S
+database DB
+participant Twilio as T
+participant Client2 as C2
+
+==통화방 입장==
+C1 -> DB: profiles>party 추가
+note right: 타인에게 현재 있는 party를 알려주기 위한 용도
+
+C1 -> DB++: party_members>members 에 나를 추가 \n(uid, status = 2, video, audio, speaker, avatar)
+DB -> S: onUpdateGroupMembers
+deactivate DB
+activate S
+S -> DB: party>members 에 나를 추가
+deactivate S
+rnote over C1: party_member, party_action \n옵저빙 시작
+
+C1 -> S++: getVideoAccessToken(uid, partyId)
+rnote over S: 통화 입장 권한 검증
+S -> C1: Token
+deactivate S
+activate C1
+C1 -> T: connect(partyId, token)
+deactivate C1
+activate T
+return onConnected
+rnote over C1: v2_chat_connect_success 로그
+
+@enduml

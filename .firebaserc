@@ -1,0 +1,18 @@
+{
+  "targets": {
+    "smoothy-publish": {
+      "hosting": {
+        "smoothy-build": [
+          "smoothy-webapp-publish"
+        ]
+      }
+    },
+    "smoothy-84e22": {
+      "hosting": {
+        "smoothy-build": [
+          "smoothy-webapp"
+        ]
+      }
+    }
+  }
+}

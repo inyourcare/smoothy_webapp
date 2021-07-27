@@ -1,0 +1,26 @@
+@startuml
+
+skinparam Shadowing false
+title Smoothy Call Flow: Ping
+
+actor User as U
+participant Client1 as C1
+participant Server as S
+database DB
+participant Twilio as T
+participant Client2 as C2
+
+==호출 발송==
+alt 메시지뷰에서 호출
+C1 -> DB: profiles>groupId 에 메시지뷰의 id 추가
+note right: 호출받은 사람도 같은 메시지뷰에 \n있다면 납치시키기 위한 용도
+else 이외 호출
+C1 -> DB: profiles>groupId 삭제
+end
+
+C1 -> S++: sendNotificationHttp_v2\n(partyId, receiver_uids, etc)
+S -> DB: party>pingSenders>uid 추가
+S -> C2: Notification 발송\n(partyId, sender_uid, etc)
+deactivate S
+
+@enduml

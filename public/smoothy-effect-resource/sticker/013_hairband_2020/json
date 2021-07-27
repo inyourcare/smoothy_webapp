@@ -1,0 +1,25 @@
+{
+    "stickerList": [{
+        "type": "sticker",
+        "stickerName": "2020",
+        "rotate2D": "",
+        "centerIndexList": [43],
+        "width": 600,
+        "height": 450,
+        "baseScale": 2.37,
+        "startIndex": 6,
+        "endIndex": 26,
+        "frames": 48,
+        "duration": 63,
+        "offsetX": 0,
+        "offsetY": -0.5555555555555556,
+        "offsetZ": "",
+        "lut": "img_lut_106_daydream1",
+        "isFront": false,
+        "action": 0,
+        "stickerLooping": 1,
+        "audioPath": "",
+        "audioLooping": 0,
+        "maxcount": 5
+    }]
+}

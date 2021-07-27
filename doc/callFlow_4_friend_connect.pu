@@ -1,0 +1,50 @@
+@startuml
+
+skinparam Shadowing false
+title Smoothy Call Flow: Friend Connect
+
+actor User as U
+participant Client1 as C1
+participant Server as S
+database DB
+participant Twilio as T
+participant Client2 as C2
+
+==친구 연결==
+S -> C2: 호출 수신
+
+C2 <-]: 호출 클릭, 납치, \n직접 입장
+activate C2
+C2 -> DB: party_member>member 에 본인 추가
+activate DB
+DB -> C1: 옵저브
+deactivate DB
+activate C1
+C1 -> U: 친구 셀 추가. "탑승 중" 표시
+deactivate C1
+
+C2 -> T: connect(partyId, token)
+deactivate C2
+activate T
+alt 친구가 나보다 늦게 연결
+T -> C1: onParticipantConnected
+activate C1
+else 친구가 나보다 빨리 연결
+rnote over C1: 안 불림. onConnected 시의 정보를 이용
+end
+rnote over C1: v2_chat_connected_friend_success 로그
+rnote over C1: v2_chat_start 로그
+deactivate C1
+T -> C1: onAudioTrackSubscribed
+activate C1
+C1 -> U: 친구 소리 켭/끔
+deactivate C1
+T -> C1: onVideoTrackSubscribed
+deactivate T
+activate C1
+rnote over C1: 1초 delay (실제 프레임을 기다리기 위해)
+C1 -> U: 친구 셀 "탑승 중" 제거
+C1 -> U: 친구 영상 켬/끔
+deactivate C1
+
+@enduml

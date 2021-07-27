@@ -1,0 +1,62 @@
+@startuml
+
+skinparam Shadowing false
+title Smoothy Call Flow: Initiate
+
+actor User as U
+participant Client1 as C1
+participant Server as S
+database DB
+participant Twilio as T
+participant Client2 as C2
+
+==PartyId 획득==
+U -> C1: 호출, 새방 생성, 기존방 조인, \n호출 클릭, 통화링크 생성, 통화링크 클릭
+
+alt 호출
+alt 1:1 호출
+rnote over C1: current 이용
+else 기존방 호출
+rnote over C1: 기존 PartyId 이용
+end
+rnote over C1: 호출 발송
+
+else 새방 생성 (1:1 조인 포함)
+rnote over C1: PartyId 생성
+C1->U: 통화방 입장, \n인원수별 카메라 해상도 변경
+C1->U: "부르는 중" 표시
+rnote over C1: 호출 발송
+
+else 기존방 조인
+rnote over C1: 기존 PartyId 이용
+C1->U: 통화방 입장, \n인원수별 카메라 해상도 변경
+
+else 호출 클릭, (대기방에 있다면) 납치
+alt current 수신
+alt 발신자의 profiles > partyId 있음
+rnote over C1: profiles > partyId 이용
+else 없음
+rnote over C1: PartyId 생성
+end
+else partyId 수신
+rnote over C1: 수신된 PartyId 이용
+end
+C1->U: 통화방 입장, \n인원수별 카메라 해상도 변경
+C1->U: "부르는 중" 표시
+rnote over C1: sender가 방에 없으면 리턴핑 호출 발송
+
+else 통화링크 생성
+rnote over C1: PartyId 생성
+C1 -> S: createOpenChat(party_id, sender)
+return openchat_key
+C1->U: 표준 공유창
+
+else 통화링크 클릭
+C1 -> S: getOpenChat(openchat_key)
+return party_id, sender, timestamp
+C1->U: 통화방 입장, \n인원수별 카메라 해상도 변경
+C1->U: "부르는 중" 표시
+rnote over C1: sender가 방에 없으면 리턴핑 호출 발송
+end
+
+@enduml

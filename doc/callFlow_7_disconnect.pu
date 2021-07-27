@@ -1,0 +1,31 @@
+@startuml
+
+skinparam Shadowing false
+title Smoothy Call Flow: Disconnect
+
+actor User as U
+participant Client1 as C1
+participant Server as S
+database DB
+participant Twilio as T
+participant Client2 as C2
+
+==통화방 나감==
+U -> C1: X 버튼, 에러로 disconnect, \nparty_member에 혼자 남음
+activate C1
+
+C1 -> DB: party_history2 기록
+C1 -> DB: profiles>party 제거
+C1 -> DB++: party_members>members 에서 나를 제거
+DB -> S: onUpdateGroupMembers
+deactivate DB
+activate S
+S -> DB: party>members 에 나를 제거
+deactivate S
+rnote over C1: party_member, party_action \n옵저빙 중단
+
+C1 -> T: disconnect(partyId)
+C1 -> U: 대기방으로 이동
+deactivate C1
+
+@enduml

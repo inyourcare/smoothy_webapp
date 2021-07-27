@@ -1,0 +1,25 @@
+@startuml
+
+skinparam Shadowing false
+title Sign Up Flow: 3. username 생성
+
+actor User as U
+participant Client as C1
+database DB
+
+==로그인 후 Profile에 username이 없을 때==
+
+U->C1: 타이핑
+activate C1
+C1->C1: 4글자 이상 or 20글자 이하 체크
+C1->C1: 영문, 숫자가 1자 이상 포함 체크
+C1->C1: 영문 대소문자, 숫자, 특수기호 (-),(_)만 사용 체크
+C1->DB: Username DB에 존재하는지 중복 체크
+DB->C1: result
+C1->U: 체크 통과 시 Next 버튼 활성화
+deactivate C1
+U->C1: Next 클릭
+C1->DB: Profile 업데이트(username)
+C1->DB: Username 생성(uid)
+
+@enduml
