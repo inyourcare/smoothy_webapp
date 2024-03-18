@@ -1,5 +1,28 @@
 # Smoothy Webapp
 
+## 상위버전의 Node 로 실행시
+```
+# for macOS, Linux or Windows Git Bash
+export NODE_OPTIONS=--openssl-legacy-provider
+
+# for Windows CMD (Command Prompt)
+set NODE_OPTIONS=--openssl-legacy-provider
+
+# for Windows PowerShell
+$env:NODE_OPTIONS="--openssl-legacy-provider"
+
+# for Docker (in your Dockerfile)
+ENV NODE_OPTIONS="--openssl-legacy-provider"
+```
+
+## ReactNode 에러처리
+```
+package.json
+  "resolutions": {
+    "@types/react": "^17.0.38"
+  }
+```
+
 ## Enviconment variables
 
  - ~~~console.log(process.env.NODE_ENV)~~~ ${process.env.REACT_APP_MODE} // yarn build -> production // yarn start -> development

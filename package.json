@@ -78,5 +78,8 @@
     ]
   },
   "devDependencies": {},
-  "proxy": "http://localhost:3000"
+  "proxy": "http://localhost:3000",
+  "resolutions": {
+    "@types/react": "^17.0.38"
+  }
 }
