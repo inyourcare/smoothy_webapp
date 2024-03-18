@@ -223,8 +223,8 @@ export const useStyles = makeStyles((theme) => ({
     height: "100vh",
   },
   sideImage: {
-    // backgroundImage: "url(https://source.unsplash.com/random)",
-    backgroundImage: "url(https://firebasestorage.googleapis.com/v0/b/smoothy-84e22.appspot.com/o/web%2Fsmoothy_web_main_artwork.png?alt=media&token=e895b747-b4de-420e-bdcf-8d48e4684f30)",
+    backgroundImage: "url(https://source.unsplash.com/random)",
+    // backgroundImage: "url(https://firebasestorage.googleapis.com/v0/b/smoothy-84e22.appspot.com/o/web%2Fsmoothy_web_main_artwork.png?alt=media&token=e895b747-b4de-420e-bdcf-8d48e4684f30)",
     backgroundRepeat: "no-repeat",
     // backgroundColor:
     //   theme.palette.type === "light"

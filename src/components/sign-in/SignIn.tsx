@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
+import Box from "@material-ui/core/Box";
+import Checkbox from "@material-ui/core/Checkbox";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
+import React, { useEffect, useState } from "react";
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import SignInButtons from "./SignInButtons";
-import constants from "../../lib/common/constants";
+import Typography from "@material-ui/core/Typography";
 import { useSelector } from "react-redux";
-import { RootState } from "../../modules";
+import constants from "../../lib/common/constants";
 import { fromNow } from "../../lib/util/timeUtils";
+import { RootState } from "../../modules";
 import { useStyles } from "../common/CustomStyle";
+import SignInButtons from "./SignInButtons";
 
 function Copyright() {
   return (
@@ -112,8 +112,8 @@ export default function SignIn() {
                 />
               ) : (
                 <img
-                  // src={constants.smoothy.images.ufo}
-                  src={"https://firebasestorage.googleapis.com/v0/b/smoothy-84e22.appspot.com/o/web%2Fweb_main_smoothyprofile%402x.png?alt=media&token=ef7de4c6-d4f2-4921-b492-e65040db1f7b"}
+                  src={constants.smoothy.images.ufo}
+                  // src={"https://firebasestorage.googleapis.com/v0/b/smoothy-84e22.appspot.com/o/web%2Fweb_main_smoothyprofile%402x.png?alt=media&token=ef7de4c6-d4f2-4921-b492-e65040db1f7b"}
                   className={classes.icon}
                   alt="logo"
                 />
