@@ -1,16 +1,16 @@
 import ReactDOM from "react-dom";
-import App from "./App";
-import styled, { createGlobalStyle, css } from "styled-components";
-import reset from "styled-reset";
-import createSagaMiddleware from "redux-saga";
-import { applyMiddleware, createStore } from "redux";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import { AnyAction, Dispatch, Middleware, applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import logger from "redux-logger";
-import rootReducer, { rootSaga } from "./modules";
-import { Provider } from "react-redux";
-import { initializeFirebase } from "./lib/firebase";
+import createSagaMiddleware from "redux-saga";
+import styled, { createGlobalStyle, css } from "styled-components";
+import reset from "styled-reset";
+import App from "./App";
 import constants from "./lib/common/constants";
-import { BrowserRouter } from "react-router-dom";
+import { initializeFirebase } from "./lib/firebase";
+import rootReducer, { rootSaga } from "./modules";
 
 // initialize firebaase
 initializeFirebase();
@@ -87,11 +87,12 @@ function createWiggleCSS() {
 }
 const sagaMiddleware = createSagaMiddleware();
 
+// const logger: Redux.Middleware<{}, any, Dispatch<AnyAction>> = createLogger(); 
 export const store = createStore(
   rootReducer,
   composeWithDevTools(
     process.env.REACT_APP_MODE === "development"
-      ? applyMiddleware(sagaMiddleware, logger) // dev
+      ? applyMiddleware(sagaMiddleware, logger as Middleware<{}, any, Dispatch<AnyAction>>) // dev
       : applyMiddleware(sagaMiddleware) // produnction , test
   ) // 개발자 도구 활성화
 );

@@ -26,7 +26,7 @@ export default function createAsyncSaga<P1, P2, P3>(
         : yield call(promiseCreator);
       yield put(asyncActionCreator.success(response));
     } catch (e) {
-      yield put(asyncActionCreator.failure(e));
+      yield put(asyncActionCreator.failure(e as any));
     }
     yield put({type:SET_BUTTON_ENABLE})
   };

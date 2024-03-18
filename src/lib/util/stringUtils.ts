@@ -96,7 +96,8 @@ export function copyToClipboard(val: string) {
   // document.execCommand("copy");
   // document.body.removeChild(input)
 
-  navigator.permissions.query({name: "clipboard-write"}).then(result => {
+  // navigator.permissions.query({name: "clipboard-write"}).then(result => {
+  navigator.permissions.query({name: 'clipboard-write' as PermissionName}).then(result => {
     if (result.state === "granted" || result.state === "prompt") {
       /* write to the clipboard now */
       navigator.clipboard.writeText(val).then(function() {
