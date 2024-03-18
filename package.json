@@ -51,6 +51,7 @@
     "youtube-search": "^1.1.6"
   },
   "scripts": {
+    "dev": "cp .env.development .env.local && react-scripts start",
     "start": "cp .env.start .env.local && react-scripts start",
     "start:prod": "cp .env.start.prod .env.local && react-scripts start",
     "build": "cp .env.production .env.local && react-scripts --max_old_space_size=8096  build",
