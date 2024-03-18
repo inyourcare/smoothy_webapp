@@ -32,6 +32,16 @@ function SignInButtons() {
       >
         페이스북으로 로그인
       </Button>
+      {/* <Button
+        // type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={`${classes.root} ${classes.signInBtn}`}
+        onClick={() => firestoreTest()}
+      >
+        테스트
+      </Button> */}
     </>
   );
 }

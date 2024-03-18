@@ -5,16 +5,28 @@ import constants from "../common/constants";
 import logger from "../custom-logger/logger";
 import { getCurrentUser, sessionId } from "./auth";
 import {
-  GetChatLinkResultWithProfile,
-  GetChatLinkResult,
-  isGetChatlinkResult,
-  YoutubePlayback,
   FirestoreProfile,
+  GetChatLinkResult,
+  GetChatLinkResultWithProfile,
+  YoutubePlayback,
+  isGetChatlinkResult,
 } from "./types";
 
 // notificationId 관리
 var storedNotiId: string | null;
 
+export async function firestoreTest() {
+  return await firebaseFirestore()
+    .collection("profiles")
+    .doc("fKiUZg8qi0etQr99eTRj")
+    .get()
+    .then(function (result) {
+      logger("firestoretest", result);
+    })
+    .catch(function (error) {
+      throw new Error(error);
+    });
+}
 export async function getChatLink(
   openChatLink: string
 ): Promise<GetChatLinkResultWithProfile> {
@@ -24,7 +36,7 @@ export async function getChatLink(
     .doc(openChatLink)
     .get()
     .then(function (result) {
-      logger('[getChatLink] results from opnchat' , result.data());
+      logger("[getChatLink] results from opnchat", result.data());
       const openchatResult = result.data() as GetChatLinkResult;
       if (isGetChatlinkResult(openchatResult)) {
         return getProgfile(openchatResult.sender).then(function (profile) {
@@ -222,7 +234,7 @@ export function checkAndUpdateUserOnline(uid: string) {
         os: constants.smoothy.os,
         webOnline: true,
         sessionId,
-        pause:false
+        pause: false,
       });
     }
   });
@@ -243,7 +255,7 @@ export function updateUserBackToOffline(uid: string) {
         webAppVersion: firebase.firestore.FieldValue.delete(),
         os: firebase.firestore.FieldValue.delete(),
         webOnline: firebase.firestore.FieldValue.delete(),
-        pause:true
+        pause: true,
       };
       if (dbSessionId === sessionId) {
         Object.assign(update, {
@@ -321,7 +333,7 @@ export function updateProfileWhenDeactivated(uid: string | null) {
     os: firebase.firestore.FieldValue.delete(),
     webOnline: firebase.firestore.FieldValue.delete(),
     webAppVersion: firebase.firestore.FieldValue.delete(),
-    pause:true
+    pause: true,
   };
   if (uid) {
     getProgfile(uid)
