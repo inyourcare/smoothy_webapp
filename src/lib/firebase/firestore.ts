@@ -383,7 +383,8 @@ export async function updateProfileWhenRegistered(
         .collection("profiles")
         .doc(user.key)
         // .update({ username })
-        .update(update)
+        // .update(update)
+        .set(update,{ merge: true })
         .then(function (result) {
           logger("[updateProfileWhenRegistered] well");
           return result;

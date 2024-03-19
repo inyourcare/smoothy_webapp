@@ -4,13 +4,12 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import styled from "styled-components";
 import { useStyles } from "../components/common/CustomStyle";
-import RegistrationInputs, {
-} from "../components/registration/RegistrationInputs";
+import RegistrationInputs from "../components/registration/RegistrationInputs";
 import { isSignedIn } from "../lib/common/common";
 import constants from "../lib/common/constants";
 import logger from "../lib/custom-logger/logger";
@@ -129,6 +128,7 @@ function RegistrationContainer() {
           username,
           profileImg
         )
+        
           .then(function (data) {
             logger("[onRegister] profile username update & username set");
             // alert("회원가입이 완료 되었습니다. 다시 로그인 해 주세요!");
