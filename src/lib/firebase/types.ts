@@ -21,7 +21,7 @@ type TimestampFirebase = {
 export type GetChatLinkResult = {
   partyNo: string;
   sender: string;
-  timestamp: TimestampFirebase;
+  timestamp?: TimestampFirebase;
 };
 export type GetChatLinkResultWithProfile = GetChatLinkResult & {
   // partyNo:string;

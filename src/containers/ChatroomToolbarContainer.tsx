@@ -9,12 +9,7 @@ import LeaveRoomDialog from "../components/dialogs/LeaveRoomDialog";
 import constants from "../lib/common/constants";
 import { pushToTwilioVideoChatContainer } from "../lib/common/history";
 import { onInsertChatlinkInput } from "../lib/common/home";
-import logger, { errorLogger } from "../lib/custom-logger/logger";
-import {
-  beFriendEachotherWithOpenchatlink,
-  friends,
-  getCurrentUser,
-} from "../lib/firebase";
+import logger from "../lib/custom-logger/logger";
 import { onOffTrack, provideOwnMedia } from "../lib/twilio";
 import { RootState } from "../modules";
 import {
@@ -373,6 +368,7 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startVideoChatEffect = useEffect(() => {
+    logger('startVideoChatEffect',isLandingEventHandled,chatlinkData,chatlinkInput,chatlinkSubmitted)
     if (
       (isLandingEventHandled === false &&
         chatlinkData?.partyNo &&
@@ -392,54 +388,54 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
         from: constants.videoChat.from.openchat,
       });
       // 챗링크 입력 => sender가 친구가 아니면 친구 만듦 =>
-      if (friends.get(chatlinkData.sender)) {
-        // dispatch({type:SET_TWILIO_VIDEOCHAT_PROPS,payload:{...chatlinkData, chatlink}})
-        // history.push({
-        //   pathname: "/videochat",
-        //   // search:"?test=abc",
-        //   // state: { ...chatlinkData, chatlink },
-        // });
-        // pushToTwilioVideoChatContainer({
-        //   chatlinkData,
-        //   chatlink: chatlinkInput
-        //     ? chatlinkInput
-        //     : (chatlinkData.openChatLink as string),
-        //   history,
-        //   from: constants.videoChat.from.openchat,
-        // });
-      } else {
-        beFriendEachotherWithOpenchatlink(
-          getCurrentUser()?.uid as string,
-          chatlinkInput
-        )
-          .then(function (result) {
-            logger("beFriendEachotherWithOpenchatlink in use effect");
-            if (
-              result.successList.filter((uid) => uid === chatlinkData.sender)
-                .length > 0
-            ) {
-              logger("beFriendEachotherWithOpenchatlink result->", result);
-              // dispatch({type:SET_TWILIO_VIDEOCHAT_PROPS,payload:{...chatlinkData, chatlink}})
-              // history.push({
-              //   pathname: "/videochat",
-              //   // search:"?test=abc",
-              //   // state: { ...chatlinkData, chatlink },
-              // });
+      // if (friends.get(chatlinkData.sender)) {
+      //   // dispatch({type:SET_TWILIO_VIDEOCHAT_PROPS,payload:{...chatlinkData, chatlink}})
+      //   // history.push({
+      //   //   pathname: "/videochat",
+      //   //   // search:"?test=abc",
+      //   //   // state: { ...chatlinkData, chatlink },
+      //   // });
+      //   // pushToTwilioVideoChatContainer({
+      //   //   chatlinkData,
+      //   //   chatlink: chatlinkInput
+      //   //     ? chatlinkInput
+      //   //     : (chatlinkData.openChatLink as string),
+      //   //   history,
+      //   //   from: constants.videoChat.from.openchat,
+      //   // });
+      // } else {
+      //   beFriendEachotherWithOpenchatlink(
+      //     getCurrentUser()?.uid as string,
+      //     chatlinkInput
+      //   )
+      //     .then(function (result) {
+      //       logger("beFriendEachotherWithOpenchatlink in use effect");
+      //       if (
+      //         result.successList.filter((uid) => uid === chatlinkData.sender)
+      //           .length > 0
+      //       ) {
+      //         logger("beFriendEachotherWithOpenchatlink result->", result);
+      //         // dispatch({type:SET_TWILIO_VIDEOCHAT_PROPS,payload:{...chatlinkData, chatlink}})
+      //         // history.push({
+      //         //   pathname: "/videochat",
+      //         //   // search:"?test=abc",
+      //         //   // state: { ...chatlinkData, chatlink },
+      //         // });
 
-              return;
-            } else {
-              throw Error("friend each other fail");
-            }
-          })
-          .catch(function (error) {
-            console.error(error);
-            errorLogger({
-              id: `be friend each outher err`,
-              msg: `친구 추가 중 알 수 없는 에러가 발생했습니다.`,
-              error,
-            });
-          });
-      }
+      //         return;
+      //       } else {
+      //         throw Error("friend each other fail");
+      //       }
+      //     })
+      //     .catch(function (error) {
+      //       console.error(error);
+      //       errorLogger({
+      //         id: `be friend each outher err`,
+      //         msg: `친구 추가 중 알 수 없는 에러가 발생했습니다.`,
+      //         error,
+      //       });
+      //     });
+      // }
       setChatlinkInput("");
       setChatlinkSubmitted(false);
     }

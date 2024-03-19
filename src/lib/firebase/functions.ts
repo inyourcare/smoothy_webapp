@@ -1,7 +1,7 @@
 import { firebaseFunctions } from ".";
 import { store } from "../..";
 import { ATTACH_PING_LIST, SET_BUTTON_DISABLE, SET_BUTTON_ENABLE } from "../../modules/smoothy";
-import { createGroupFunctionsApi, getChatlinkFunctionsApi } from "../api/posts";
+import { createGroupFunctionsApi } from "../api/posts";
 import logger from "../custom-logger/logger";
 import { getYTPlayerJson, parseYoutubeVideoId } from "../util/parsingUtil";
 import { getCurrentUser } from "./auth";
@@ -464,7 +464,8 @@ export async function getChatlinkFunctions(
   openchatKey: string
 ): Promise<GetChatLinkResultWithProfile> {
   logger("[getChatlinkFunctions]", openchatKey);
-  return getChatlinkFunctionsApi(openchatKey);
+  return {partyNo:'temporary_partyNo_from_getChatlinkFunctions', sender:'sender_getChatlinkFunctions',openChatLink:"openChatLink_getChatlinkFunctions"}
+  // return getChatlinkFunctionsApi(openchatKey);
   // var getVideoAccessToken = firebaseFunctions().httpsCallable(
   //   "getOpenChat"
   // );

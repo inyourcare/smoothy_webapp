@@ -6,10 +6,8 @@ import logger from "../custom-logger/logger";
 import { getCurrentUser, sessionId } from "./auth";
 import {
   FirestoreProfile,
-  GetChatLinkResult,
   GetChatLinkResultWithProfile,
-  YoutubePlayback,
-  isGetChatlinkResult,
+  YoutubePlayback
 } from "./types";
 
 // notificationId 관리
@@ -31,29 +29,38 @@ export async function getChatLink(
   openChatLink: string
 ): Promise<GetChatLinkResultWithProfile> {
   logger("[getChatLink]", openChatLink);
-  return await firebaseFirestore()
-    .collection("openchat")
-    .doc(openChatLink)
-    .get()
-    .then(function (result) {
-      logger("[getChatLink] results from opnchat", result.data());
-      const openchatResult = result.data() as GetChatLinkResult;
-      if (isGetChatlinkResult(openchatResult)) {
-        return getProgfile(openchatResult.sender).then(function (profile) {
-          const result = {
-            nickname: profile?.nickname,
-            photoUriString: profile?.photoUriString,
-            openChatLink,
-            ...openchatResult,
-          } as GetChatLinkResultWithProfile;
-          return result;
-        });
-      }
-      throw new Error("Chatlink data is not valid");
-    })
-    .catch(function (error) {
-      throw new Error(error);
-    });
+  const result = {
+    nickname: 'senders_nickname',
+    photoUriString: '',
+    openChatLink,
+    partyNo:'temporary_partyNo_getChatLink',
+    sender: 'sender_getChatLink'
+    // ...openchatResult,
+  } as GetChatLinkResultWithProfile;
+  return result;
+  // return await firebaseFirestore()
+  //   .collection("openchat")
+  //   .doc(openChatLink)
+  //   .get()
+  //   .then(function (result) {
+  //     logger("[getChatLink] results from opnchat", result.data());
+  //     const openchatResult = result.data() as GetChatLinkResult;
+  //     if (isGetChatlinkResult(openchatResult)) {
+  //       return getProgfile(openchatResult.sender).then(function (profile) {
+  //         const result = {
+  //           nickname: profile?.nickname,
+  //           photoUriString: profile?.photoUriString,
+  //           openChatLink,
+  //           ...openchatResult,
+  //         } as GetChatLinkResultWithProfile;
+  //         return result;
+  //       });
+  //     }
+  //     throw new Error("Chatlink data is not valid");
+  //   })
+  //   .catch(function (error) {
+  //     throw new Error(error);
+  //   });
 }
 
 export async function addMeToParty(partyId: string) {

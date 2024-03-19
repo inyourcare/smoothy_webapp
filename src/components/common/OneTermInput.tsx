@@ -1,19 +1,18 @@
-import React, { useCallback, useState } from "react";
 import {
   Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
   DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
   Typography,
 } from "@material-ui/core";
+import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { chatlinkRequest } from "../../lib/common/home";
 import logger from "../../lib/custom-logger/logger";
 import { isChatlinkValid } from "../../lib/util/stringUtils";
-import { chatlinkRequest } from "../../lib/common/home";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../modules";
-import { fromNow } from "../../lib/util/timeUtils";
 import { useStyles } from "./CustomStyle";
 
 type OneTermInputProps = {
@@ -51,11 +50,12 @@ function OneTermInput({
     setValue(chatlink);
     const chatlinkValid = isChatlinkValid(chatlink);
     setChalinkValid(chatlinkValid);
-    if (chatlinkValid) {
-      const actualChatlink = chatlink.split("/").pop() as string;
-      // dispatch({type:CLEAR_TO_BE_USER})
-      chatlinkRequest(actualChatlink, dispatch);
-    }
+    logger('[OneTermInput onChange]',chatlinkValid,chatlink)
+    // if (chatlinkValid) {
+    //   const actualChatlink = chatlink.split("/").pop() as string;
+    //   // dispatch({type:CLEAR_TO_BE_USER})
+    //   chatlinkRequest(actualChatlink, dispatch);
+    // }
   };
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,6 +66,7 @@ function OneTermInput({
     logger("[onSubmit]", value);
     onInsert(value);
     setValue("");
+    chatlinkRequest("temporary_actual_chatlink", dispatch);
     if (setChatlinkSubmitted) setChatlinkSubmitted(true);
     if (setOpen) setOpen(false);
   };
@@ -96,10 +97,14 @@ function OneTermInput({
                   </span>{" "}
                   님이{" "}
                   <span>
-                    {getChatlinkState.data.timestamp.toMillis
+                    {/* {getChatlinkState.data.timestamp.toMillis
                       ? `${fromNow(
                           Number(getChatlinkState.data.timestamp.toMillis())
                         )}에 시작한 대화방입니다.`
+                      : "시작한 대화방입니다."} */}
+                      
+                    {true
+                      ? `PM 2:30 에 시작한 대화방입니다.`
                       : "시작한 대화방입니다."}
                   </span>{" "}
                 </>
@@ -172,12 +177,12 @@ function OneTermInput({
               <Button
                 color="primary"
                 type="submit"
-                disabled={
-                  buttonDisable ||
-                  disabled ||
-                  submitDisabled ||
-                  !(chatlinkValid && !getChatlinkState.error)
-                }
+                // disabled={
+                //   buttonDisable ||
+                //   disabled ||
+                //   submitDisabled ||
+                //   !(chatlinkValid && !getChatlinkState.error)
+                // }
                 className={`${classes.root}`}
                 variant="contained"
               >

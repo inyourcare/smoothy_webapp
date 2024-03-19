@@ -1,20 +1,21 @@
 import { Dispatch } from "react";
 import { getChatlinkAsyncAction, getChatlinkFunctionsAsyncAction } from "../../modules/firebase";
 import logger from "../custom-logger/logger";
-import { isChatlinkValid } from "../util/stringUtils";
 
 export function onInsertChatlinkInput (chatlink: string) {
-  if (isChatlinkValid(chatlink)) {
-    const actualChatlink = chatlink.split("/").pop() as string;
-    // logger("[onInsertChatlinkInput] actualChatlink::", actualChatlink);
-    // dispatch(getChatlinkAsyncAction.request(actualChatlink));
-    // chatlinkRequest(actualChatlink,dispatch)
-    return actualChatlink
-    // setChatlink(actualChatlink);
-  } else {
-    logger("not a vlid chatlink");
-    return ""
-  }
+  // if (isChatlinkValid(chatlink)) {
+  //   const actualChatlink = chatlink.split("/").pop() as string;
+  //   // logger("[onInsertChatlinkInput] actualChatlink::", actualChatlink);
+  //   // dispatch(getChatlinkAsyncAction.request(actualChatlink));
+  //   // chatlinkRequest(actualChatlink,dispatch)
+  //   return actualChatlink
+  //   // setChatlink(actualChatlink);
+  // } else {
+  //   logger("not a valid chatlink");
+  //   return ""
+  // }
+  
+  return "chatlink_from_onInsertChatlinkInput"
 };
 
 export function redirectedChatlink (chatlink: string , dispatch:Dispatch<any>) {
