@@ -1,3 +1,4 @@
+import firebase from "firebase";
 import {
   connect,
   createLocalVideoTrack,
@@ -28,7 +29,6 @@ import {
   ConnectToARoomPayload,
   Nullable,
 } from "./types";
-import firebase from "firebase";
 
 let chatTime:number;
 // const identitySpaceMap = new Map<string,HTMLElement>()
@@ -93,6 +93,7 @@ function attachTrack(
     //   identitySpaceMap.set(`${identity}` , identitySpace)
     tracksMap.set(`${identity}-${track.kind}`, track);
 
+    logger('attachTrack',track.kind,track.name)
     const dispatch = store.dispatch;
     if (track.isEnabled === true) {
       if (track.kind === "video")
