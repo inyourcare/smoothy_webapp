@@ -1,14 +1,13 @@
-import { useCallback, useState } from "react";
-import styled from "styled-components";
 import {
   Button,
   Dialog,
   DialogActions,
   Typography,
 } from "@material-ui/core";
+import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
+import styled from "styled-components";
 import { RootState } from "../../modules";
-import { uploadProfileImage } from "../../lib/firebase/storage";
 import { useStyles } from "../common/CustomStyle";
 
 const ChangeProfileImgDialogStyle = styled.div``;
@@ -46,13 +45,15 @@ function ChangeProfileImgDialog({
   }, []);
   const changeProfile = useCallback(() => {
     if (isFileSelected === true && selectedProfileImgFile.size > 0) {
-      setIsUploading(true);
-      uploadProfileImage(selectedProfileImgFile, () => {
-        setIsUploading(false);
-        dialogHandleClose();
-      });
+      // setIsUploading(true);
+      // uploadProfileImage(selectedProfileImgFile, () => {
+      //   setIsUploading(false);
+      //   dialogHandleClose();
+      // });
+      dialogHandleClose();
     }
-  }, [dialogHandleClose, isFileSelected, selectedProfileImgFile]);
+  // }, [dialogHandleClose, isFileSelected, selectedProfileImgFile]);
+  }, [isFileSelected, selectedProfileImgFile.size,dialogHandleClose]);
   return (
     <ChangeProfileImgDialogStyle>
       <Dialog
