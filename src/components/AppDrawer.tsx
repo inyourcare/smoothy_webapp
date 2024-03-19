@@ -8,20 +8,18 @@ import {
   ListItemText,
   Typography,
 } from "@material-ui/core";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 // import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 // import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { resign } from "../lib/firebase";
-import constants from "../lib/common/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { SIGN_OUT } from "../modules/firebase";
+import constants from "../lib/common/constants";
 import { RootState } from "../modules";
-import logger from "../lib/custom-logger/logger";
-import ChangeProfileImgDialog from "./dialogs/ChangeProfileImgDialog";
-import ChangeNicknameDialog from "./dialogs/ChangeUserNameDialog";
+import { SIGN_OUT } from "../modules/firebase";
 import { AlertSeverityProvider, SET_ALERT_SNACKBAR } from "../modules/smoothy";
 import { useStyles } from "./common/CustomStyle";
+import ChangeProfileImgDialog from "./dialogs/ChangeProfileImgDialog";
+import ChangeNicknameDialog from "./dialogs/ChangeUserNameDialog";
 
 const AppDrawerStyle = styled.div`
   .avatar {
@@ -70,9 +68,7 @@ function AppDrawer({}: AppDrawerProps) {
   const { buttonDisable, myProfile } = useSelector(
     (state: RootState) => state.smoothy
   );
-  const { firebaseProfile } = useSelector(
-    (state: RootState) => state.firebase
-  );
+  const { firebaseProfile } = useSelector((state: RootState) => state.firebase);
   // const onClickFuntions = {
   //   로그아웃: () => {
   //     if (user) dispatch({ type: SIGN_OUT, payload: user.key });
@@ -111,10 +107,24 @@ function AppDrawer({}: AppDrawerProps) {
     logOut: "로그아웃",
     secession: "탈퇴",
   });
-  const [providersMap] = useState(new Map([
-    ["google.com", {text:"구글로 로그인",src:constants.smoothy.images.appDrawer.settingGoogle}],
-    ["facebook.com", {text:"페이스북으로 로그인",src:constants.smoothy.images.appDrawer.settingFacebook}],
-  ]))
+  const [providersMap] = useState(
+    new Map([
+      [
+        "google.com",
+        {
+          text: "구글로 로그인",
+          src: constants.smoothy.images.appDrawer.settingGoogle,
+        },
+      ],
+      [
+        "facebook.com",
+        {
+          text: "페이스북으로 로그인",
+          src: constants.smoothy.images.appDrawer.settingFacebook,
+        },
+      ],
+    ])
+  );
 
   const drawerFunction = useCallback(
     (text: string, index: number) => {
@@ -126,24 +136,31 @@ function AppDrawer({}: AppDrawerProps) {
           if (user) dispatch({ type: SIGN_OUT, payload: user.key });
           break;
         case drawerFuntionNames.secession:
-          resign({}).then((res) => {
-            if (res && res.success === true) {
-              logger("탈퇴성공");
-              dispatch({ type: SIGN_OUT });
-            } else {
-              console.error("탈퇴실패", res);
-              // alert(
-              //   "탈퇴로직 실행 중 error 가 있었습니다. 잠시 기다린 후 다시 시도 해 주세요"
-              // );
-              dispatch({
-                type: SET_ALERT_SNACKBAR,
-                payload: {
-                  severity: AlertSeverityProvider.error,
-                  alertMessage: `탈퇴로직 실행 중 error 가 있었습니다. 잠시 기다린 후 다시 시도 해 주세요`,
-                },
-              });
-              dispatch({ type: SIGN_OUT });
-            }
+          // resign({}).then((res) => {
+          //   if (res && res.success === true) {
+          //     logger("탈퇴성공");
+          //     dispatch({ type: SIGN_OUT });
+          //   } else {
+          //     console.error("탈퇴실패", res);
+          //     // alert(
+          //     //   "탈퇴로직 실행 중 error 가 있었습니다. 잠시 기다린 후 다시 시도 해 주세요"
+          //     // );
+          //     dispatch({
+          //       type: SET_ALERT_SNACKBAR,
+          //       payload: {
+          //         severity: AlertSeverityProvider.error,
+          //         alertMessage: `탈퇴로직 실행 중 error 가 있었습니다. 잠시 기다린 후 다시 시도 해 주세요`,
+          //       },
+          //     });
+          //     dispatch({ type: SIGN_OUT });
+          //   }
+          // });
+          dispatch({
+            type: SET_ALERT_SNACKBAR,
+            payload: {
+              severity: AlertSeverityProvider.error,
+              alertMessage: `탈퇴 기능은 사용할 수 없어요 ^^;`,
+            },
           });
           break;
         case drawerFuntionNames.faq:
@@ -153,23 +170,27 @@ function AppDrawer({}: AppDrawerProps) {
           );
           break;
         case drawerFuntionNames.termsOfService:
-          window.open(
-            "https://smoothy.co/eula/smoothy",
-            "_blank"
-          );
+          window.open("https://smoothy.co/eula/smoothy", "_blank");
           break;
         case drawerFuntionNames.privacyPolicy:
-          window.open(
-            "https://smoothy.co/privacy/smoothy",
-            "_blank"
-          );
+          window.open("https://smoothy.co/privacy/smoothy", "_blank");
           break;
         default:
           console.error("[drawerFunction] no function call");
           break;
       }
     },
-    [changeUserNameDialogOpen, dispatch, drawerFuntionNames.changeUserName, drawerFuntionNames.faq, drawerFuntionNames.logOut, drawerFuntionNames.privacyPolicy, drawerFuntionNames.secession, drawerFuntionNames.termsOfService, user]
+    [
+      changeUserNameDialogOpen,
+      dispatch,
+      drawerFuntionNames.changeUserName,
+      drawerFuntionNames.faq,
+      drawerFuntionNames.logOut,
+      drawerFuntionNames.privacyPolicy,
+      drawerFuntionNames.secession,
+      drawerFuntionNames.termsOfService,
+      user,
+    ]
   );
   const getListItem = useCallback(
     (text: string, index: number) => {
@@ -229,14 +250,24 @@ function AppDrawer({}: AppDrawerProps) {
                   {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
                   <img
                     // src={constants.smoothy.images.appDrawer.settingGoogle}
-                    src={firebaseProfile && providersMap.get(firebaseProfile?.providerId)?.src? providersMap.get(firebaseProfile?.providerId)?.src : constants.smoothy.images.appDrawer.settingGoogle}
+                    src={
+                      firebaseProfile &&
+                      providersMap.get(firebaseProfile?.providerId)?.src
+                        ? providersMap.get(firebaseProfile?.providerId)?.src
+                        : constants.smoothy.images.appDrawer.settingGoogle
+                    }
                     alt="nickname"
                     className={classes.drawerListItemImg}
                   />
                 </ListItemIcon>
                 <ListItemText
                   // primary={text}
-                  primary={firebaseProfile && providersMap.get(firebaseProfile?.providerId)?.text? providersMap.get(firebaseProfile?.providerId)?.text : "알 수 없는 제공자"}
+                  primary={
+                    firebaseProfile &&
+                    providersMap.get(firebaseProfile?.providerId)?.text
+                      ? providersMap.get(firebaseProfile?.providerId)?.text
+                      : "알 수 없는 제공자"
+                  }
                   secondary={`${firebaseProfile?.displayName} `}
                 />
               </div>
@@ -279,10 +310,7 @@ function AppDrawer({}: AppDrawerProps) {
                     className={classes.drawerListItemImg}
                   />
                 </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  secondary={" "}
-                />
+                <ListItemText primary={text} secondary={" "} />
               </div>
             </ListItem>
           );
@@ -301,10 +329,7 @@ function AppDrawer({}: AppDrawerProps) {
                     className={classes.drawerListItemImg}
                   />
                 </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  secondary={" "}
-                />
+                <ListItemText primary={text} secondary={" "} />
               </div>
             </ListItem>
           );
@@ -323,10 +348,7 @@ function AppDrawer({}: AppDrawerProps) {
                     className={classes.drawerListItemImg}
                   />
                 </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  secondary={" "}
-                />
+                <ListItemText primary={text} secondary={" "} />
               </div>
             </ListItem>
           );
@@ -367,10 +389,7 @@ function AppDrawer({}: AppDrawerProps) {
                     className={classes.drawerListItemImg}
                   />
                 </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  secondary={" "}
-                />
+                <ListItemText primary={text} secondary={" "} />
               </div>
             </ListItem>
           );
@@ -384,15 +403,14 @@ function AppDrawer({}: AppDrawerProps) {
                 <ListItemIcon className={classes.drawerListItemIcon}>
                   {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
                   <img
-                    src={constants.smoothy.images.appDrawer.settingDeleteaccount}
+                    src={
+                      constants.smoothy.images.appDrawer.settingDeleteaccount
+                    }
                     alt="delete account"
                     className={classes.drawerListItemImg}
                   />
                 </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  secondary={" "}
-                />
+                <ListItemText primary={text} secondary={" "} />
               </div>
             </ListItem>
           );
@@ -401,7 +419,27 @@ function AppDrawer({}: AppDrawerProps) {
           break;
       }
     },
-    [buttonDisable, classes.drawerListItemIcon, classes.drawerListItemImg, classes.drawerListItemWrapperDiv, drawerFunction, drawerFuntionNames.changeUserName, drawerFuntionNames.faq, drawerFuntionNames.googleLogin, drawerFuntionNames.logOut, drawerFuntionNames.mailInquiry, drawerFuntionNames.myId, drawerFuntionNames.privacyPolicy, drawerFuntionNames.secession, drawerFuntionNames.termsOfService, drawerFuntionNames.version, firebaseProfile, myProfile?.nickname, myProfile?.username, providersMap]
+    [
+      buttonDisable,
+      classes.drawerListItemIcon,
+      classes.drawerListItemImg,
+      classes.drawerListItemWrapperDiv,
+      drawerFunction,
+      drawerFuntionNames.changeUserName,
+      drawerFuntionNames.faq,
+      drawerFuntionNames.googleLogin,
+      drawerFuntionNames.logOut,
+      drawerFuntionNames.mailInquiry,
+      drawerFuntionNames.myId,
+      drawerFuntionNames.privacyPolicy,
+      drawerFuntionNames.secession,
+      drawerFuntionNames.termsOfService,
+      drawerFuntionNames.version,
+      firebaseProfile,
+      myProfile?.nickname,
+      myProfile?.username,
+      providersMap,
+    ]
   );
 
   const changeProfileImgDialogClick = useCallback(() => {

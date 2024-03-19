@@ -1,19 +1,22 @@
-import styled from "styled-components";
-import constants from "../lib/common/constants";
 import { Button } from "@material-ui/core";
 import { useCallback, useEffect, useState } from "react";
-import OneTermInput from "../components/common/OneTermInput";
-import { onInsertChatlinkInput } from "../lib/common/home";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../modules";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+import OneTermInput from "../components/common/OneTermInput";
+import CreateNewChatDialog from "../components/dialogs/CreateNewChatDialog";
+import LeaveRoomDialog from "../components/dialogs/LeaveRoomDialog";
+import constants from "../lib/common/constants";
+import { pushToTwilioVideoChatContainer } from "../lib/common/history";
+import { onInsertChatlinkInput } from "../lib/common/home";
+import logger, { errorLogger } from "../lib/custom-logger/logger";
 import {
   beFriendEachotherWithOpenchatlink,
-  getCurrentUser,
   friends,
+  getCurrentUser,
 } from "../lib/firebase";
-import { pushToTwilioVideoChatContainer } from "../lib/common/history";
-import logger, { errorLogger } from "../lib/custom-logger/logger";
+import { onOffTrack, provideOwnMedia } from "../lib/twilio";
+import { RootState } from "../modules";
 import {
   ACTIVATE_EACH_SCREEN_HAMMER_MODE,
   AlertSeverityProvider,
@@ -22,18 +25,15 @@ import {
   DEACTIVATE_EACH_SCREEN_HAMMER_MODE,
   SET_ALERT_SNACKBAR,
 } from "../modules/smoothy";
-import { onOffTrack, provideOwnMedia } from "../lib/twilio";
-import LeaveRoomDialog from "../components/dialogs/LeaveRoomDialog";
-import CreateNewChatDialog from "../components/dialogs/CreateNewChatDialog";
 // import { preprocessToDisconnect } from "../lib/common/twilio-video-chat";
 // import { defaultOnBeforeUnload } from "../lib/common/common";
 import EffectButtonSpace from "../components/EffectButtonSpace";
-import YoutubueView from "../components/youtube";
-import { commonDisconnectARoom } from "../lib/common/chatroom-toolbar";
+import { useStyles } from "../components/common/CustomStyle";
 import ChatroomPaticipantsDialog from "../components/dialogs/ChatroomPaticipantsDialog";
 import DeviceConfigDialog from "../components/dialogs/DeviceConfigDialog";
+import YoutubueView from "../components/youtube";
+import { commonDisconnectARoom } from "../lib/common/chatroom-toolbar";
 import { youtubeDeactivatedCallback } from "../lib/common/common";
-import { useStyles } from "../components/common/CustomStyle";
 
 const ChatroomToolbarStyle = styled.div`
   position: absolute;
@@ -357,6 +357,7 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
   const mediaOnOffDetectEffect = useEffect(() => {
     // if (roomConnected) {
     // } else {
+    logger('mediaOnOffDetectEffect', video_enabled,audio_enabled,user,user?.key)
     if (video_enabled.filter((uid) => uid === user?.key).length > 0) {
       setIsCameraOn(true);
     } else {
@@ -368,7 +369,7 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
       setIsAudioOn(false);
     }
     // }
-  }, [audio_enabled, roomConnected, user?.key, video_enabled]);
+  }, [audio_enabled, roomConnected, user, video_enabled]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startVideoChatEffect = useEffect(() => {

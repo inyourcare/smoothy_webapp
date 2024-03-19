@@ -370,6 +370,7 @@ export async function updateProfileWhenRegistered(
 ) {
   logger(`[updateProfileWhenRegistered]`, user);
   var update = {
+    key: user.key,
     username,
   };
   if (photoUriString) Object.assign(update, { photoUriString });
