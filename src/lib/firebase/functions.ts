@@ -495,23 +495,27 @@ export async function createGroupFunctions(
 
 export async function createOpenChatFunctions(party_id: string) {
   logger("[createOpenChatFunctions]", party_id);
-  var createOpenChat = firebaseFunctions().httpsCallable("createOpenChat");
+  return {
+    success: true,
+    openchatKey: "temporary_openchatkey",
+  }
+  // var createOpenChat = firebaseFunctions().httpsCallable("createOpenChat");
 
-  const uid = getCurrentUser()?.uid;
-  if (!uid) throw new Error("No signed in user");
-  return await createOpenChat({
-    party_id,
-    sender: uid,
-  })
-    .then(function (response) {
-      return {
-        success: response.data.success as boolean,
-        openchatKey: response.data.openchat_key as string,
-      };
-    })
-    .catch(function (error) {
-      throw new Error(error);
-    });
+  // const uid = getCurrentUser()?.uid;
+  // if (!uid) throw new Error("No signed in user");
+  // return await createOpenChat({
+  //   party_id,
+  //   sender: uid,
+  // })
+  //   .then(function (response) {
+  //     return {
+  //       success: response.data.success as boolean,
+  //       openchatKey: response.data.openchat_key as string,
+  //     };
+  //   })
+  //   .catch(function (error) {
+  //     throw new Error(error);
+  //   });
 }
 
 export function testHttpsCallable(

@@ -1,7 +1,10 @@
 import { Button, Dialog, DialogActions, Typography } from "@material-ui/core";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import constants from "../../lib/common/constants";
+import logger, { errorLogger } from "../../lib/custom-logger/logger";
+import { createOpenChatFunctions, getPartyId } from "../../lib/firebase";
 import { copyToClipboard } from "../../lib/util/stringUtils";
 import { RootState } from "../../modules";
 import { useStyles } from "../common/CustomStyle";
@@ -38,42 +41,42 @@ function CreateNewChatDialog({ open, setOpen }: CreateNewChatDialogProps) {
   // }, [open, setOpen, copyTheLink]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const defaultEffect = useEffect(() => {
-  //   const createOpenChatFunctionsCallback = function (partyId: string) {
-  //     logger('[defaultEffect] createOpenChatFunctionsCallback' , partyId)
-  //     createOpenChatFunctions(`${partyId}`)
-  //       .then(function (result) {
-  //         setLink(
-  //           constants.smoothy.openchatHost +
-  //             constants.smoothy.openchatPath +
-  //             result.openchatKey
-  //         );
-  //         setLinkNotLoaded(false);
-  //       })
-  //       .catch(function (error) {
-  //         errorLogger({
-  //           id: `${constants.smoothy.error.fail_to_create_new_chat.id}`,
-  //           msg: `${constants.smoothy.error.fail_to_create_new_chat.msg}`,
-  //           error,
-  //         });
-  //       });
-  //   };
-  //   if (linkNotLoaded === true) {
-  //     if (partyNo) {
-  //       createOpenChatFunctionsCallback(partyNo);
-  //     } else {
-  //       getPartyId()
-  //         .then(createOpenChatFunctionsCallback)
-  //         .catch(function (error) {
-  //           errorLogger({
-  //             id: `${constants.smoothy.error.fail_to_create_new_chat.id}`,
-  //             msg: `${constants.smoothy.error.fail_to_create_new_chat.msg}`,
-  //             error,
-  //           });
-  //         });
-  //     }
-  //   }
-  // }, [linkNotLoaded, partyNo]);
+  const defaultEffect = useEffect(() => {
+    const createOpenChatFunctionsCallback = function (partyId: string) {
+      logger('[defaultEffect] createOpenChatFunctionsCallback' , partyId)
+      createOpenChatFunctions(`${partyId}`)
+        .then(function (result) {
+          setLink(
+            constants.smoothy.openchatHost +
+              constants.smoothy.openchatPath +
+              result.openchatKey
+          );
+          setLinkNotLoaded(false);
+        })
+        .catch(function (error) {
+          errorLogger({
+            id: `${constants.smoothy.error.fail_to_create_new_chat.id}`,
+            msg: `${constants.smoothy.error.fail_to_create_new_chat.msg}`,
+            error,
+          });
+        });
+    };
+    if (linkNotLoaded === true) {
+      if (partyNo) {
+        createOpenChatFunctionsCallback(partyNo);
+      } else {
+        getPartyId()
+          .then(createOpenChatFunctionsCallback)
+          .catch(function (error) {
+            errorLogger({
+              id: `${constants.smoothy.error.fail_to_create_new_chat.id}`,
+              msg: `${constants.smoothy.error.fail_to_create_new_chat.msg}`,
+              error,
+            });
+          });
+      }
+    }
+  }, [linkNotLoaded, partyNo]);
   return (
     <CreateNewChatDialogStyle>
       <Dialog

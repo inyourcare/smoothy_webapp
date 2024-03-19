@@ -530,7 +530,8 @@ export async function getProgfile(uid: string) {
 
 export async function getPartyId() {
   logger(`[getPartyId] start`);
-  return `party_${firebaseFirestore().collection("party").doc().id}`;
+  // return `party_${firebaseFirestore().collection("party").doc().id}`;
+  return `party_originally_temporary_party_id`;
 }
 
 ////////////////////////////////
