@@ -1,20 +1,18 @@
-import styled from "styled-components";
-import Avatar from "@material-ui/core/Avatar";
-import { RootState } from "../../modules";
-import { useSelector } from "react-redux";
-import constants from "../../lib/common/constants";
-import { useCallback, useEffect, useState } from "react";
 import {
+  Button,
   Dialog,
   DialogActions,
-  Typography,
   List,
   ListItem,
-  Button,
+  Typography,
 } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import { useCallback, useState } from "react";
+import { useSelector } from "react-redux";
+import styled from "styled-components";
+import constants from "../../lib/common/constants";
 import { copyToClipboard } from "../../lib/util/stringUtils";
-import { createOpenChatFunctions, getPartyId } from "../../lib/firebase";
-import logger, { errorLogger } from "../../lib/custom-logger/logger";
+import { RootState } from "../../modules";
 import { useStyles } from "../common/CustomStyle";
 
 const ChatroomPaticipantsDialogStyle = styled.div``;
@@ -42,40 +40,40 @@ function ChatroomPaticipantsDialog({
   var itemIndex = 0;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const defaultEffect = useEffect(() => {
-    const createOpenChatFunctionsCallback = function (partyId: string) {
-      logger('[participantsDialog defaultEffect] createOpenChatFunctionsCallback' , partyId)
-      createOpenChatFunctions(`${partyId}`)
-        .then(function (result) {
-          setLink(
-            constants.smoothy.openchatHost +
-              constants.smoothy.openchatPath +
-              result.openchatKey
-          );
-          setLinkNotLoaded(false);
-        })
-        .catch(function (error) {
-          errorLogger({
-            id: `${constants.smoothy.error.fail_to_create_new_chat.id}`,
-            msg: `${constants.smoothy.error.fail_to_create_new_chat.msg}`,
-            error,
-          });
-        });
-    };
-    if (partyNo) {
-      createOpenChatFunctionsCallback(partyNo);
-    } else {
-      getPartyId()
-        .then(createOpenChatFunctionsCallback)
-        .catch(function (error) {
-          errorLogger({
-            id: `${constants.smoothy.error.fail_to_create_new_chat.id}`,
-            msg: `${constants.smoothy.error.fail_to_create_new_chat.msg}`,
-            error,
-          });
-        });
-    }
-  }, [partyNo]);
+  // const defaultEffect = useEffect(() => {
+  //   const createOpenChatFunctionsCallback = function (partyId: string) {
+  //     logger('[participantsDialog defaultEffect] createOpenChatFunctionsCallback' , partyId)
+  //     createOpenChatFunctions(`${partyId}`)
+  //       .then(function (result) {
+  //         setLink(
+  //           constants.smoothy.openchatHost +
+  //             constants.smoothy.openchatPath +
+  //             result.openchatKey
+  //         );
+  //         setLinkNotLoaded(false);
+  //       })
+  //       .catch(function (error) {
+  //         errorLogger({
+  //           id: `${constants.smoothy.error.fail_to_create_new_chat.id}`,
+  //           msg: `${constants.smoothy.error.fail_to_create_new_chat.msg}`,
+  //           error,
+  //         });
+  //       });
+  //   };
+  //   if (partyNo) {
+  //     createOpenChatFunctionsCallback(partyNo);
+  //   } else {
+  //     getPartyId()
+  //       .then(createOpenChatFunctionsCallback)
+  //       .catch(function (error) {
+  //         errorLogger({
+  //           id: `${constants.smoothy.error.fail_to_create_new_chat.id}`,
+  //           msg: `${constants.smoothy.error.fail_to_create_new_chat.msg}`,
+  //           error,
+  //         });
+  //       });
+  //   }
+  // }, [partyNo]);
 
   // const profiles = Array.from(videoChatUserProfiles.values()).map((profile) => {
   const profiles = Array.from(videoChatUserProfiles.keys()).map((uid) => {
