@@ -627,9 +627,10 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
             </div>
           )}
         </Button>
-        {partyNo && reactionListOpen ? (
+        {/* {partyNo && reactionListOpen ? ( */}
+        {reactionActivated && reactionListOpen ? (
           <EffectButtonSpace
-            partyId={partyNo}
+            // partyId={partyNo}
             fullscreenHammerEffectOnClick={fullscreenHammerEffectOnClick}
             // youtubeMode={youtubeMode}
             hammerMode={eachscreen.hammer}

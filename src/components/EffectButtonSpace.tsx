@@ -83,7 +83,7 @@ const EffectButtonSpaceStyle = styled.div`
 `;
 
 type EffectButtonSpaceProps = {
-  partyId: string;
+  // partyId: string;
   fullscreenHammerEffectOnClick: (
     e: React.MouseEvent,
     effectName: string
@@ -94,7 +94,7 @@ type EffectButtonSpaceProps = {
   // enable: boolean;
 };
 function EffectButtonSpace({
-  partyId,
+  // partyId,
   fullscreenHammerEffectOnClick,
   // youtubeMode,
   hammerMode,

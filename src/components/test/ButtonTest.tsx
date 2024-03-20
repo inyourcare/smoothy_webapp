@@ -1,12 +1,12 @@
 import {
   Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography,
   DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
 } from "@material-ui/core";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import constants from "../../lib/common/constants";
@@ -15,9 +15,9 @@ import { testHttpsCallable } from "../../lib/firebase";
 import { RootState } from "../../modules";
 // import ChatroomPaticipantsDialog from "../home/ChatroomPaticipantsDialog";
 // import CreateNewChatDialog from "../home/CreateNewChatDialog";
+import EffectButtonSpace from "../EffectButtonSpace";
+import ChangeProfileImgDialog from "../dialogs/ChangeProfileImgDialog";
 import DeviceConfigDialog from "../dialogs/DeviceConfigDialog";
-import ChangeProfileImgDialog from '../dialogs/ChangeProfileImgDialog'
-import EffectButtonSpace from '../EffectButtonSpace'
 
 const Style = styled.div`
   .hi2 {
@@ -62,10 +62,12 @@ const Style = styled.div`
 function ButtonTest() {
   const { actualUsers } = useSelector((state: RootState) => state.twilio);
   const [createNewChatDialogOpen, setCreateNewChatDialogOpen] = useState(false);
-  const [participantsListDialogOpen, setParticipantsListDialogOpen] = useState(false);
+  const [participantsListDialogOpen, setParticipantsListDialogOpen] =
+    useState(false);
   const [deviceConfigDialogOpen, setDeviceConfigDialogOpen] = useState(false);
   const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
-  const [changeProfileImgDialogOpen, setChangeProfileImgDialogOpen] = useState(false);
+  const [changeProfileImgDialogOpen, setChangeProfileImgDialogOpen] =
+    useState(false);
   const disconnectOnClick = () => {
     setDisconnectDialogOpen(true);
   };
@@ -78,7 +80,11 @@ function ButtonTest() {
       <Style>
         <div id="chatroom-share-btn-div">
           {/* <Button disabled={buttonDisable}> */}
-          <Button onClick={() => setParticipantsListDialogOpen(!participantsListDialogOpen)}>
+          <Button
+            onClick={() =>
+              setParticipantsListDialogOpen(!participantsListDialogOpen)
+            }
+          >
             <div className="btn-background-div">
               {/* <span>워치파티</span> */}
               <img
@@ -128,7 +134,9 @@ function ButtonTest() {
           </Button>
           <Button
             className="hi1"
-            onClick={()=>setChangeProfileImgDialogOpen(!changeProfileImgDialogOpen)}
+            onClick={() =>
+              setChangeProfileImgDialogOpen(!changeProfileImgDialogOpen)
+            }
             variant="contained"
           >
             프로필사진변경
@@ -197,7 +205,12 @@ function ButtonTest() {
               alt="mic"
             />
           </Button>
-          <EffectButtonSpace partyId="" fullscreenHammerEffectOnClick={()=>{}} hammerMode={false} setClose={(s:boolean)=>{}}/>
+          <EffectButtonSpace
+            // partyId=""
+            fullscreenHammerEffectOnClick={() => {}}
+            hammerMode={false}
+            setClose={(s: boolean) => {}}
+          />
           <Button
             onClick={() => {
               logger("3");
@@ -221,7 +234,7 @@ function ButtonTest() {
             />
           </Button>
           <Button
-            onClick={()=>setDeviceConfigDialogOpen(!deviceConfigDialogOpen)}
+            onClick={() => setDeviceConfigDialogOpen(!deviceConfigDialogOpen)}
           >
             <img
               src={constants.smoothy.images.toolbar.config}
