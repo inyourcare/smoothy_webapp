@@ -111,13 +111,28 @@ const SmoothyVideoFrameLayout = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
   }
+  
+  .img-div {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  .img-wrapper-div {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const PortfolioTestButtonSpaceStyle = styled.div`
   .effect-space {
     position: absolute;
     left: 10px;
-    bottom: 10px;
+    top: 10px;
     z-index: ${constants.smoothy.zidx.btn};
     /* display: none; */
   }
@@ -162,15 +177,15 @@ function PortFolioVideoChatContainer({
   //   twilioVideoChatProps as TwilioVideoChatProps;
   // const { video_enabled, selectedVideoDevice, selectedAudioDevice } =
   //   useSelector((state: RootState) => state.twilio);
-  const [portfolioTestActivated,setPortfolioTestActivated] = useState(false);
+  const [portfolioTestActivated, setPortfolioTestActivated] = useState(false);
   const [hammerMode, setHammerMode] = useState(false);
   const [youtubeMode, setYoutubeMode] = useState(false);
   const [youtubeVideoDivWidthHeight, setYoutubeVideoDivWidthHeight] = useState({
     width: 0,
     height: 0,
   });
-  const [video_enabled, setVideo_enabled] = useState([]);
-  const [actualUsers, setActualUsers] = useState(["1", "2", "3"]);
+  const [video_enabled, setVideo_enabled] = useState(["__quniqueId__1"]);
+  const [actualUsers, setActualUsers] = useState(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3"]);
   const [userProfiles, setUserProfiles] = useState(
     new Map<string, FirestoreProfile>()
   );
@@ -674,7 +689,7 @@ function PortFolioVideoChatContainer({
               // if (partyMembers.length > 4) videoTrack.style.height = "33vh";
               // if (partyMembers.length > 6) videoTrack.style.height = "25vh";
               // Array.from(partyMembers.values()).map((member) => (
-              Array.from(actualUsers.values()).map((uid) => (
+              Array.from(actualUsers.values()).map((uid,num) => (
                 // Array.from(['1','2','3'].values()).map((uid) => (
                 <div
                   // key={member.key}
@@ -710,7 +725,29 @@ function PortFolioVideoChatContainer({
                       ?.classList.contains(
                         AttachedClassNameProvider["video"] */}
                     {video_enabled.filter((elem) => elem === uid).length >
-                    0 ? null : (
+                    // 0 ? null : (
+                    0 ? (
+                      <div id={`${uid}`} className="img-div">
+                        <div className="img-wrapper-div">
+                          <img
+                            // src={process.env.PUBLIC_URL + "/images/test2.jpg"}
+                            src={process.env.PUBLIC_URL + `/images/test${num+1}.jpg`}
+                            className="img-contain"
+                            alt="test2"
+                            style={{
+                              // maxWidth: "640px",
+                              // maxWidth: "50%",
+                              width: "50%",
+                              height: getHeightForVideoSpace(
+                                actualUsers.length,
+                                youtubeVideoDivWidthHeight.height
+                              ),
+                              // height: getHeightForVideoSpace(actualUsers.length),
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ) : (
                       <>
                         <NotArrivedVideoBox profiles={userProfiles} uid={uid} />
                       </>
@@ -744,7 +781,12 @@ function PortFolioVideoChatContainer({
         </div>
         <PortfolioTestButtonSpaceStyle>
           <div className="effect-space">
-            <button className="ative-effect-btn" onClick={()=>{setPortfolioTestActivated(!portfolioTestActivated)}}>
+            <button
+              className="ative-effect-btn"
+              onClick={() => {
+                setPortfolioTestActivated(!portfolioTestActivated);
+              }}
+            >
               test
             </button>
             {/* <button className="ative-effect-btn" onClick={test}>test!</button> */}
@@ -752,19 +794,103 @@ function PortFolioVideoChatContainer({
               <div>
                 <button
                   className="btn"
-                  onClick={(e) =>
-                    setActualUsers(['1','2','3','4'])
-                  }
+                  onClick={(e) => setActualUsers(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3"])}
+                >
+                  make 3
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) => setActualUsers(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4"])}
                 >
                   make 4
                 </button>
                 <button
                   className="btn"
+                  onClick={(e) => setActualUsers(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4", "__quniqueId__5"])}
+                >
+                  make 5
+                </button>
+                <button
+                  className="btn"
                   onClick={(e) =>
-                    setActualUsers(['1','2','3'])
+                    setActualUsers(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4", "__quniqueId__5", "__quniqueId__6"])
                   }
                 >
-                  make 3
+                  make 6
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) =>
+                    setActualUsers(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4", "__quniqueId__5", "__quniqueId__6", "__quniqueId__7"])
+                  }
+                >
+                  make 7
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) =>
+                    setActualUsers(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4", "__quniqueId__5", "__quniqueId__6", "__quniqueId__7", "__quniqueId__8"])
+                  }
+                >
+                  make 8
+                </button>
+
+                <button className="btn" onClick={(e) => setVideo_enabled([])}>
+                  connected 0
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) => setVideo_enabled(["__quniqueId__1"])}
+                >
+                  connected 1
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) => setVideo_enabled(["__quniqueId__1", "__quniqueId__2"])}
+                >
+                  connected 2
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) => setVideo_enabled(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3"])}
+                >
+                  connected 3
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) => setVideo_enabled(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4"])}
+                >
+                  connected 4
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) => setVideo_enabled(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4", "__quniqueId__5"])}
+                >
+                  connected 5
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) =>
+                    setVideo_enabled(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4", "__quniqueId__5", "__quniqueId__6"])
+                  }
+                >
+                  connected 6
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) =>
+                    setVideo_enabled(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4", "__quniqueId__5", "__quniqueId__6", "__quniqueId__7"])
+                  }
+                >
+                  connected 7
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) =>
+                    setVideo_enabled(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3", "__quniqueId__4", "__quniqueId__5", "__quniqueId__6", "__quniqueId__7", "__quniqueId__8"])
+                  }
+                >
+                  connected 8
                 </button>
               </div>
             )}
