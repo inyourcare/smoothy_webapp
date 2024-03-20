@@ -7,7 +7,7 @@ import Test from "./components/test";
 import ChatroomToolbar from "./containers/ChatroomToolbarContainer";
 import ErrorPageContainer from "./containers/ErrorPageContainer";
 // import SignIn from './components/SignIn';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from "@material-ui/core";
 import { WhiteTextTypography } from "./components/common/CustomComponents";
 import AlertSnackbar from "./components/snackbar/AlertSnackbar";
 import HomeContainer from "./containers/HomeContainer";
@@ -395,7 +395,7 @@ function App() {
           <div>
             <WhiteTextTypography variant="h1">
               {/* {"로딩중..."} */}
-              <CircularProgress size={300} thickness={3.6}/>
+              <CircularProgress size={300} thickness={3.6} />
             </WhiteTextTypography>
           </div>
         </div>
@@ -444,6 +444,17 @@ function App() {
               }}
             >
               회원가입
+            </Link>
+            <Link
+              to="/videochat"
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 230,
+                zIndex: constants.smoothy.zidx.btn,
+              }}
+            >
+              videochat
             </Link>
           </>
         ) : null}
@@ -494,7 +505,9 @@ function App() {
             path="/videochat"
             render={() => (
               // <TwilioVideoChatContainer setOnBeforeUnload={setOnBeforeUnload} />
-              <PortFolioVideoChatContainer setOnBeforeUnload={setOnBeforeUnload} />
+              <PortFolioVideoChatContainer
+                setOnBeforeUnload={setOnBeforeUnload}
+              />
             )}
           />
           <Route exact path="/registration" component={RegistrationContainer} />

@@ -13,20 +13,14 @@ import constants from "../lib/common/constants";
 import {
   divHitByHammerAction,
   getBackToOriginalSizeAfterHammerHit,
-  getHeightForVideoSpace
+  getHeightForVideoSpace,
 } from "../lib/common/twilio-video-chat";
 import logger from "../lib/custom-logger/logger";
-import {
-  FirestoreProfile,
-  addHammerReaction,
-  getCurrentUser,
-  removeHammerReaction
-} from "../lib/firebase";
-import { changeDevice } from "../lib/twilio";
+import { FirestoreProfile } from "../lib/firebase";
 import { RootState } from "../modules";
 import {
   SET_YOUTUBE_DIV_WITH_HEIGHT,
-  TwilioVideoChatProps
+  TwilioVideoChatProps,
 } from "../modules/smoothy";
 import { SET_IS_TWILIO_CHATROOM_ON } from "../modules/twilio";
 
@@ -119,6 +113,19 @@ const SmoothyVideoFrameLayout = styled.div`
   }
 `;
 
+const PortfolioTestButtonSpaceStyle = styled.div`
+  .effect-space {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: ${constants.smoothy.zidx.btn};
+    /* display: none; */
+  }
+  .ative-effect-btn {
+    background-color: yellowgreen;
+  }
+`;
+
 function isTwilioVideoChatProps(
   result: TwilioVideoChatProps
 ): result is TwilioVideoChatProps {
@@ -143,19 +150,27 @@ function PortFolioVideoChatContainer({
   const { partyMembers, friends, fullscreenEffect } = useSelector(
     (state: RootState) => state.firebase
   );
-  const {
-    roomConnected,
-    twilioVideoChatProps,
-    youtube,
-    eachscreen,
-    pingListMap,
-    youtubeVideoDivWidthHeight,
-  } = useSelector((state: RootState) => state.smoothy);
-  const { partyNo, sender, chatlink } =
-    twilioVideoChatProps as TwilioVideoChatProps;
-  const { video_enabled, selectedVideoDevice, selectedAudioDevice } =
-    useSelector((state: RootState) => state.twilio);
-  const [actualUsers, setActualUsers] = useState([""]);
+  // const {
+  //   roomConnected,
+  //   twilioVideoChatProps,
+  //   youtube,
+  //   eachscreen,
+  //   pingListMap,
+  //   youtubeVideoDivWidthHeight,
+  // } = useSelector((state: RootState) => state.smoothy);
+  // const { partyNo, sender, chatlink } =
+  //   twilioVideoChatProps as TwilioVideoChatProps;
+  // const { video_enabled, selectedVideoDevice, selectedAudioDevice } =
+  //   useSelector((state: RootState) => state.twilio);
+  const [portfolioTestActivated,setPortfolioTestActivated] = useState(false);
+  const [hammerMode, setHammerMode] = useState(false);
+  const [youtubeMode, setYoutubeMode] = useState(false);
+  const [youtubeVideoDivWidthHeight, setYoutubeVideoDivWidthHeight] = useState({
+    width: 0,
+    height: 0,
+  });
+  const [video_enabled, setVideo_enabled] = useState([]);
+  const [actualUsers, setActualUsers] = useState(["1", "2", "3"]);
   const [userProfiles, setUserProfiles] = useState(
     new Map<string, FirestoreProfile>()
   );
@@ -207,7 +222,7 @@ function PortFolioVideoChatContainer({
     // disconnect 하면서 기존의 onBeforeUnload 로 바꿔줘야함
     setOnBeforeUnload(defaultOnBeforeUnload);
     history.push("/");
-  // }, [dispatch, history, partyNo, roomConnected, setOnBeforeUnload]);
+    // }, [dispatch, history, partyNo, roomConnected, setOnBeforeUnload]);
   }, [history, setOnBeforeUnload]);
 
   const getContainerElem = useCallback(
@@ -263,11 +278,12 @@ function PortFolioVideoChatContainer({
   const getBackToOriginalSize = useCallback(
     (e: HTMLDivElement) => {
       getBackToOriginalSizeAfterHammerHit(e);
-      if (partyNo)
-        removeHammerReaction(partyNo, getCurrentUser()?.uid as string);
+      // if (partyNo)
+      //   removeHammerReaction(partyNo, getCurrentUser()?.uid as string);
       hmmerCntMap.set(e.id, 0);
     },
-    [hmmerCntMap, partyNo]
+    // [hmmerCntMap, partyNo]
+    [hmmerCntMap]
   );
 
   const hammerAction = useCallback(
@@ -358,7 +374,8 @@ function PortFolioVideoChatContainer({
       setUserProfiles(new Map<string, FirestoreProfile>());
       dispatch({ type: SET_IS_TWILIO_CHATROOM_ON, payload: false });
     };
-  }, [chatlink, dispatch, history, partyNo, sender]);
+    // }, [chatlink, dispatch, history, partyNo, sender]);
+  }, [dispatch, history]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const observePartyMembersEffect = useEffect(() => {
@@ -483,7 +500,8 @@ function PortFolioVideoChatContainer({
   // hammer mode 변경시 각 element 에 관련 class 추가 및 제거 해주는 역할
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hammerModeTriggerEffect = useEffect(() => {
-    if (eachscreen.hammer === true) {
+    // if (eachscreen.hammer === true) {
+    if (hammerMode === true) {
       logger("eachScreenHammerMode is true");
       getContainerElem().classList.add(
         constants.videoChat.mode.eachScreenAndHammerMode
@@ -497,13 +515,13 @@ function PortFolioVideoChatContainer({
         const element = elem as HTMLDivElement;
         element.onclick = () => {
           logger("onclick", element.style.width, element.clientWidth);
-          if (partyNo)
-            addHammerReaction(
-              partyNo,
-              element.id,
-              constants.reaction.eachscreen.hammer.img,
-              getCurrentUser()?.uid as string
-            );
+          // if (partyNo)
+          //   addHammerReaction(
+          //     partyNo,
+          //     element.id,
+          //     constants.reaction.eachscreen.hammer.img,
+          //     getCurrentUser()?.uid as string
+          //   );
           hammerAction(element);
         };
       });
@@ -524,13 +542,14 @@ function PortFolioVideoChatContainer({
       });
     }
   }, [
-    eachscreen.hammer,
+    // eachscreen.hammer,
     getBackToOriginalSize,
     getContainerElem,
     hammerAction,
     hammerTimerMap,
     partyMembers,
-    partyNo,
+    // partyNo,
+    hammerMode,
   ]); // partyMembers 파티 변할때 대비
 
   // //
@@ -576,7 +595,8 @@ function PortFolioVideoChatContainer({
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const youtubeSelectedEffect = useEffect(() => {
-    if (youtube.selectedVideo) {
+    // if (youtube.selectedVideo) {
+    if (false) {
       // setYoutubeVideoDivHeight(50);
       dispatch({
         type: SET_YOUTUBE_DIV_WITH_HEIGHT,
@@ -589,22 +609,22 @@ function PortFolioVideoChatContainer({
         payload: { width: 0, height: 0 },
       });
     }
-  }, [dispatch, youtube.selectedVideo]);
+  }, [dispatch]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const userDeviceChangedEffect = useEffect(() => {
-    logger(
-      "[userDeviceChangedEffect] start",
-      selectedVideoDevice,
-      selectedAudioDevice
-    );
-    if (selectedVideoDevice) {
-      changeDevice("video", selectedVideoDevice);
-    }
-    if (selectedAudioDevice) {
-      changeDevice("audio", selectedAudioDevice);
-    }
-  }, [selectedVideoDevice, selectedAudioDevice]);
+  // const userDeviceChangedEffect = useEffect(() => {
+  //   logger(
+  //     "[userDeviceChangedEffect] start",
+  //     selectedVideoDevice,
+  //     selectedAudioDevice
+  //   );
+  //   if (selectedVideoDevice) {
+  //     changeDevice("video", selectedVideoDevice);
+  //   }
+  //   if (selectedAudioDevice) {
+  //     changeDevice("audio", selectedAudioDevice);
+  //   }
+  // }, [selectedVideoDevice, selectedAudioDevice]);
 
   return (
     <>
@@ -633,16 +653,17 @@ function PortFolioVideoChatContainer({
                   // height: getHeightForVideoSpace(actualUsers.length),
                 }}
               >
-                {partyNo && youtube.selectedVideo && (
+                {/* {partyNo && youtube.selectedVideo && ( */}
+                {youtubeMode && (
                   <YoutubeVideoDetail
-                    videoId={youtube.selectedVideo.id}
-                    title={youtube.selectedVideo?.title}
-                    description={youtube.selectedVideo?.description}
+                    videoId={""}
+                    title={"videotitle here"}
+                    description={"video description here"}
                     // _onReady={onReadyForYTDetail}
                     // _onEnd={onEndForYTDetail}
                     // _onStateChange={onStateChangeForYTDetail}
                     // player={player}
-                    partyId={partyNo}
+                    partyId={undefined}
                   />
                 )}
               </div>
@@ -654,6 +675,7 @@ function PortFolioVideoChatContainer({
               // if (partyMembers.length > 6) videoTrack.style.height = "25vh";
               // Array.from(partyMembers.values()).map((member) => (
               Array.from(actualUsers.values()).map((uid) => (
+                // Array.from(['1','2','3'].values()).map((uid) => (
                 <div
                   // key={member.key}
                   key={uid}
@@ -720,6 +742,34 @@ function PortFolioVideoChatContainer({
             setOpen={setLeaveRoomDialogOpen}
           />
         </div>
+        <PortfolioTestButtonSpaceStyle>
+          <div className="effect-space">
+            <button className="ative-effect-btn" onClick={()=>{setPortfolioTestActivated(!portfolioTestActivated)}}>
+              test
+            </button>
+            {/* <button className="ative-effect-btn" onClick={test}>test!</button> */}
+            {portfolioTestActivated === true && (
+              <div>
+                <button
+                  className="btn"
+                  onClick={(e) =>
+                    setActualUsers(['1','2','3','4'])
+                  }
+                >
+                  make 4
+                </button>
+                <button
+                  className="btn"
+                  onClick={(e) =>
+                    setActualUsers(['1','2','3'])
+                  }
+                >
+                  make 3
+                </button>
+              </div>
+            )}
+          </div>
+        </PortfolioTestButtonSpaceStyle>
       </SmoothyVideoFrameLayout>
     </>
   );

@@ -18,7 +18,7 @@ import {
   TEST_DEACTIVATE_TEST_MODE,
 } from "../../modules/test";
 // import ButtonTest from "./ButtonTest"; // 에뮬레이터 테스트
-import YoutubeTest from "./YoutubeTest";
+import SmoothyVideoFrameLayout from "./VideoChatRoomTest";
 // import DialogTest from "./DialogTest";
 // import DialogTest2 from "./DialogTest2";
 // import RegistrationPageTest from './RegistrationPageTest'
@@ -61,7 +61,7 @@ function Test() {
         <div>{friend.key}</div>
       ))} */}
       {/* <button onClick={onClickTest} style={{position: "absolute", top: 50, left: 0}}>sign in test</button> */}
-      {/* <SmoothyVideoFrameLayout/> 비디오 프레임 & 이펙트 버튼 테스트였으나 지금과 너무 다름 */}
+      <SmoothyVideoFrameLayout/> 비디오 프레임 & 이펙트 버튼 테스트였으나 지금과 너무 다름
       {/* <DragTest/> */}
       {/* <SpringDemo/> */}
       {/* <MediaSelectTest/> */}
@@ -73,7 +73,7 @@ function Test() {
         {/* <RegistrationPageTest></RegistrationPageTest> */}
       {/* </TestStyle> */}
       {/* <RegistrationPageTest></RegistrationPageTest> */}
-      <YoutubeTest/>
+      {/* <YoutubeTest/> */}
     </>
   );
 }

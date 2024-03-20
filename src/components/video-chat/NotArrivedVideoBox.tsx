@@ -14,7 +14,6 @@ import {
   pingForceJoin,
 } from "../../lib/firebase";
 import { RootState } from "../../modules";
-import { TwilioVideoChatProps } from "../../modules/smoothy";
 import { useStyles } from "../common/CustomStyle";
 import Progress from "../common/Progress";
 
@@ -81,10 +80,11 @@ function NotArrivedVideoBox({ uid, profiles }: NotArrivedVideoBoxProps) {
     profiles?.get(uid)?.photoUriString
   );
   const { pingListMap, buttonDisable } = useSelector((state: RootState) => state.smoothy);
-  const { twilioVideoChatProps } = useSelector(
-    (state: RootState) => state.smoothy
-  );
-  const { partyNo, sender } = twilioVideoChatProps as TwilioVideoChatProps;
+  // const { twilioVideoChatProps } = useSelector(
+  //   (state: RootState) => state.smoothy
+  // );
+  // const { partyNo, sender } = twilioVideoChatProps as TwilioVideoChatProps;
+  const [ partyNo, sender ] = ['temporalPartyNo','temporalSender'];
   const [reForceBtnDisabled, setReforceBtnDisabled] = useState(false);
   // const [reforcePingProgress, setReforcePingProgress] = useState(false);
 
