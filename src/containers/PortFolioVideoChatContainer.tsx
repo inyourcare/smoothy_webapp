@@ -19,6 +19,7 @@ import logger from "../lib/custom-logger/logger";
 import { FirestoreProfile } from "../lib/firebase";
 import { RootState } from "../modules";
 import {
+  SET_REACTION_ACTIVATED,
   SET_YOUTUBE_DIV_WITH_HEIGHT,
   TwilioVideoChatProps,
 } from "../modules/smoothy";
@@ -352,6 +353,7 @@ function PortFolioVideoChatContainer({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const defaultEffect = useEffect(() => {
     dispatch({ type: SET_IS_TWILIO_CHATROOM_ON, payload: true });
+    dispatch({ type: SET_REACTION_ACTIVATED, payload: true });
     // if (
     //   isTwilioVideoChatProps({
     //     partyNo,
@@ -388,6 +390,7 @@ function PortFolioVideoChatContainer({
       setActualUsers([""]);
       setUserProfiles(new Map<string, FirestoreProfile>());
       dispatch({ type: SET_IS_TWILIO_CHATROOM_ON, payload: false });
+      dispatch({ type: SET_REACTION_ACTIVATED, payload: false });
     };
     // }, [chatlink, dispatch, history, partyNo, sender]);
   }, [dispatch, history]);

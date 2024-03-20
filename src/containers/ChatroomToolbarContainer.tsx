@@ -182,6 +182,7 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
     eachscreen,
     youtube,
     buttonDisable,
+    reactionActivated
   } = useSelector((state: RootState) => state.smoothy);
   const { video_enabled, audio_enabled, isTwilioChatroomstart } = useSelector(
     (state: RootState) => state.twilio
@@ -261,7 +262,8 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
   }, [history, partyNo, roomConnected, setOnBeforeUnload]);
 
   const exitChatRoom = useCallback(() => {
-    if (roomConnected && partyNo) setLeaveRoomDialogOpen(true);
+    // if (roomConnected && partyNo) setLeaveRoomDialogOpen(true);
+    if (reactionActivated) setLeaveRoomDialogOpen(true);
     // else alert("통화중이 아닙니다.");
     else
       dispatch({
@@ -271,10 +273,11 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
           alertMessage: `통화중이 아닙니다.`,
         },
       });
-  }, [dispatch, partyNo, roomConnected]);
+  }, [dispatch, reactionActivated]);
 
   const openReactionList = useCallback(() => {
-    if (roomConnected && partyNo) {
+    // if (roomConnected && partyNo) {
+    if (reactionActivated) {
       setReactionListOpen(!reactionListOpen);
       // } else alert("통화중이 아닙니다.");
     } else
@@ -285,7 +288,7 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
           alertMessage: `통화중이 아닙니다.`,
         },
       });
-  }, [dispatch, partyNo, reactionListOpen, roomConnected]);
+  }, [dispatch,reactionListOpen, reactionActivated]);
 
   const fullscreenHammerEffectOnClick = useCallback(() => {
     if (eachscreen.hammer === true)
@@ -294,7 +297,8 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
   }, [dispatch, eachscreen.hammer]);
 
   const toggleYoutubeMode = useCallback(() => {
-    if (roomConnected && partyNo) {
+    // if (roomConnected && partyNo) {
+    if (reactionActivated) {
       setYoutubeDialogOpen(!youtubeDialogOpen);
       // if (youtubeMode === true) {
       //   logger("EffectButtonSpace deactivate");
@@ -313,7 +317,7 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
         alertMessage: `통화중이 아닙니다.`,
       },
     });
-  }, [dispatch, partyNo, roomConnected, youtubeDialogOpen]);
+  }, [dispatch, reactionActivated, youtubeDialogOpen]);
 
   // const youtubeDeactivatedCallback = useCallback(() => {
   //   // todo:: 유튜브가 종료되는 경우 처리
@@ -332,11 +336,13 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const youtubeDeactivatedDetectEffect = useEffect(() => {
-    if (roomConnected && partyNo) {
+    // if (roomConnected && partyNo) {
+    if (reactionActivated) {
       if (!youtube.sharedVideoPlayback) {
         if (isYoutubeActivated) {
           // alert("youtube mode 종료");
-          youtubeDeactivatedCallback(partyNo);
+          // youtubeDeactivatedCallback(partyNo);
+          youtubeDeactivatedCallback();
         }
         setIsYoutubeActivated(false);
       } else {
@@ -346,7 +352,7 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
         setIsYoutubeActivated(true);
       }
     }
-  }, [isYoutubeActivated, partyNo, roomConnected, youtube.sharedVideoPlayback]);
+  }, [isYoutubeActivated, reactionActivated , youtube.sharedVideoPlayback]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const mediaOnOffDetectEffect = useEffect(() => {
@@ -461,7 +467,8 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const effectChangeWhenNotChatEffect = useEffect(() => {
-    if (!roomConnected) {
+    // if (!roomConnected) {
+    if (!reactionActivated) {
       setReactionListOpen(false);
       document
         .getElementById("chatroom-toolbar-effect-div")
@@ -483,7 +490,7 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
         .getElementById("chatroom-toolbar-audio-on-div")
         ?.classList.remove("opacity-disable");
     }
-  }, [setReactionListOpen, roomConnected]);
+  }, [setReactionListOpen, reactionActivated]);
 
   return (
     <ChatroomToolbarStyle>

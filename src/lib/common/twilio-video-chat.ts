@@ -171,7 +171,8 @@ export function preprocessToDisconnect(
   dispatch({ type: CLEAR_PING_LIST, payload: partyNo });
   // db 정리
   removeMeFromParty(partyNo);
-  youtubeDeactivatedCallback(partyNo);
+  // youtubeDeactivatedCallback(partyNo);
+  youtubeDeactivatedCallback();
   updateProfileParty(null);
   updateProfilePartyGroup(null);
 }

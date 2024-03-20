@@ -77,3 +77,7 @@ export const setMyProfileAction = createAction(SET_MY_PROFILE)<FirestoreProfile>
 // alert snackbar
 export const SET_ALERT_SNACKBAR = "smoothy/SET_ALERT_SNACKBAR"
 export const setAlertSnackbarAction = createAction(SET_ALERT_SNACKBAR)<AlertSnackbarProps>()
+
+// portfolio
+export const SET_REACTION_ACTIVATED = "smoothy/SET_REACTION_ACTIVATED";
+export const setReactionActivated = createAction(SET_REACTION_ACTIVATED)<Boolean>()

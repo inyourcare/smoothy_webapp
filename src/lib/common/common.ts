@@ -1,16 +1,14 @@
 import { Dispatch } from "react";
+import { store } from "../..";
+import { SmoothyUser } from "../../modules/firebase";
+import { CLEAR_SELECTED_VIDEO } from "../../modules/smoothy";
+import logger from "../custom-logger/logger";
 import {
   getCurrentUser,
-  removeItemsFromPlayList,
-  removePlayback,
   signOut,
-  updateProfileWhenDeactivated,
+  updateProfileWhenDeactivated
 } from "../firebase";
-import { SmoothyUser } from "../../modules/firebase";
-import logger from "../custom-logger/logger";
 import constants from "./constants";
-import { store } from "../..";
-import { CLEAR_SELECTED_VIDEO } from "../../modules/smoothy";
 
 export type ObjectType = {
   [key: string]: any;
@@ -24,7 +22,8 @@ export default function commonClose(
   if (callback) callback();
 
   if (partyId){
-    youtubeDeactivatedCallback(partyId)
+    // youtubeDeactivatedCallback(partyId)
+    youtubeDeactivatedCallback()
   }
 
   const currentUid = getCurrentUser()?.uid;
@@ -154,10 +153,11 @@ export function defaultOnBeforeUnload() {
   };
 }
 
-export function youtubeDeactivatedCallback(partyNo:string){
-  if (partyNo) {
-    removePlayback(partyNo);
-    removeItemsFromPlayList(partyNo);
+// export function youtubeDeactivatedCallback(partyNo:string){
+export function youtubeDeactivatedCallback(){
+  // if (partyNo) {
+    // removePlayback(partyNo);
+    // removeItemsFromPlayList(partyNo);
     store.dispatch({ type: CLEAR_SELECTED_VIDEO });
-  }
+  // }
 }

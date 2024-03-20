@@ -1,12 +1,12 @@
 import { Button } from "@material-ui/core";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import constants from "../lib/common/constants";
 // import logger from "../lib/custom-logger/logger";
-import { addFullscreenReaction, getCurrentUser } from "../lib/firebase";
 import { RootState } from "../modules";
+import { ADD_FULLSCREEN_EFFECT } from "../modules/firebase";
 // import { ACTIVATE_YOUTUBE, DEACTIVATE_YOUTUBE } from "../modules/smoothy";
 
 const EffectButtonSpaceStyle = styled.div`
@@ -102,16 +102,22 @@ function EffectButtonSpace({
 }: // enable,
 EffectButtonSpaceProps) {
   // const [activeEffect, setActiveEffect] = useState(false);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { buttonDisable } = useSelector((state: RootState) => state.smoothy);
   const fullscreenEffectOnClick = (e: React.MouseEvent, effectName: string) => {
+    dispatch({ type: ADD_FULLSCREEN_EFFECT, payload: {
+      count: 0,
+      item: effectName,
+      sendTimeStamp: 1234,
+      sender: 'sender',
+  } });
     // appendFullscreenReaction(effectName, parent() as Element);
-    addFullscreenReaction(
-      partyId,
-      undefined,
-      effectName,
-      getCurrentUser()?.uid as string
-    );
+    // addFullscreenReaction(
+    //   partyId,
+    //   undefined,
+    //   effectName,
+    //   getCurrentUser()?.uid as string
+    // );
   };
   // const activeEffectClick = () => {
   //   setActiveEffect(!activeEffect);

@@ -1,20 +1,20 @@
-import * as action from "./actions";
+import { Room } from "twilio-video";
 import { ActionType } from "typesafe-actions";
-import { SmoothyUser } from "../firebase";
+import { AlertSnackbarSeverity } from "../../components/snackbar/AlertSnackbar";
+import { YoutubeVideoType } from "../../components/youtube/types";
 import {
   FirestoreProfile,
   MessagingPayload,
   YoutubePlayback,
   YoutubePlaylist,
 } from "../../lib/firebase";
-import { Room } from "twilio-video";
-import { YoutubeVideoType } from "../../components/youtube/types";
-import { AlertSnackbarSeverity } from "../../components/snackbar/AlertSnackbar";
+import { SmoothyUser } from "../firebase";
+import * as action from "./actions";
 
 export type youtubeDivWidthHeight = {
-  width: number,
-  height: number
-}
+  width: number;
+  height: number;
+};
 export type ToBeUser = SmoothyUser & {
   loading: boolean;
   credential: firebase.default.auth.AuthCredential;
@@ -50,6 +50,7 @@ export type SmoothyState = {
   videoChatUserProfiles: Map<string, FirestoreProfile>;
   myProfile: FirestoreProfile | null;
   alertSnackbar: AlertSnackbarProps | null;
+  reactionActivated: Boolean;
 };
 
 export type PingListActionParams = {
