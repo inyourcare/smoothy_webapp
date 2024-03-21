@@ -54,7 +54,7 @@ const EffectButtonSpaceStyle = styled.div`
     }
   }
   .hammer-mode-border-img {
-    /* border: 5px solid #eaeaea; */
+    border: 5px solid #eaeaea;
     padding: 0px;
   }
   #reaction-close-btn {
@@ -211,21 +211,21 @@ EffectButtonSpaceProps) {
             <Button
               className="effect-space-btn"
               onClick={(e) =>
-                // fullscreenHammerEffectOnClick(
-                //   e,
-                //   constants.reaction.eachscreen.hammer.img
-                // )
-                {
-                  const target = e.currentTarget;
-                  target.classList.add(constants.animation.buttonClicked);
-                  setTimeout(() => {
-                    target.classList.remove(constants.animation.buttonClicked);
-                  }, 500);
-                  fullscreenEffectOnClick(
-                    e,
-                    constants.reaction.eachscreen.hammer.img
-                  );
-                }
+                fullscreenHammerEffectOnClick(
+                  e,
+                  constants.reaction.eachscreen.hammer.img
+                )
+                // {
+                //   const target = e.currentTarget;
+                //   target.classList.add(constants.animation.buttonClicked);
+                //   setTimeout(() => {
+                //     target.classList.remove(constants.animation.buttonClicked);
+                //   }, 500);
+                //   fullscreenEffectOnClick(
+                //     e,
+                //     constants.reaction.eachscreen.hammer.img
+                //   );
+                // }
               }
               disabled={buttonDisable}
             >

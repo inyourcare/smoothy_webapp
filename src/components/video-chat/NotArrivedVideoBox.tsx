@@ -10,8 +10,7 @@ import styled from "styled-components";
 import constants from "../../lib/common/constants";
 import {
   FirestoreProfile,
-  getCurrentUser,
-  pingForceJoin,
+  getCurrentUser
 } from "../../lib/firebase";
 import { RootState } from "../../modules";
 import { useStyles } from "../common/CustomStyle";
@@ -92,13 +91,13 @@ function NotArrivedVideoBox({ uid, profiles }: NotArrivedVideoBoxProps) {
   // callback
   const reForcePing = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (partyNo && sender)
-        pingForceJoin(
-          getCurrentUser()?.displayName as string,
-          sender,
-          1,
-          partyNo
-        );
+      // if (partyNo && sender)
+      //   pingForceJoin(
+      //     getCurrentUser()?.displayName as string,
+      //     sender,
+      //     1,
+      //     partyNo
+      //   );
       // const progress = document.getElementById("reforce-ping-progress");
       // const self = document.getElementById("reforce-ping-btn")
       // progress?.classList.remove("displayNone");

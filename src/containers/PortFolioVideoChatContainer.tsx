@@ -166,20 +166,20 @@ function PortFolioVideoChatContainer({
   const { partyMembers, friends, fullscreenEffect } = useSelector(
     (state: RootState) => state.firebase
   );
-  // const {
-  //   roomConnected,
-  //   twilioVideoChatProps,
-  //   youtube,
-  //   eachscreen,
-  //   pingListMap,
-  //   youtubeVideoDivWidthHeight,
-  // } = useSelector((state: RootState) => state.smoothy);
+  const {
+    roomConnected,
+    twilioVideoChatProps,
+    youtube,
+    eachscreen,
+    pingListMap,
+    // youtubeVideoDivWidthHeight,
+  } = useSelector((state: RootState) => state.smoothy);
   // const { partyNo, sender, chatlink } =
   //   twilioVideoChatProps as TwilioVideoChatProps;
   // const { video_enabled, selectedVideoDevice, selectedAudioDevice } =
   //   useSelector((state: RootState) => state.twilio);
   const [portfolioTestActivated, setPortfolioTestActivated] = useState(false);
-  const [hammerMode, setHammerMode] = useState(false);
+  // const [hammerMode, setHammerMode] = useState(false);
   const [youtubeMode, setYoutubeMode] = useState(false);
   const [youtubeVideoDivWidthHeight, setYoutubeVideoDivWidthHeight] = useState({
     width: 0,
@@ -518,8 +518,8 @@ function PortFolioVideoChatContainer({
   // hammer mode 변경시 각 element 에 관련 class 추가 및 제거 해주는 역할
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hammerModeTriggerEffect = useEffect(() => {
-    // if (eachscreen.hammer === true) {
-    if (hammerMode === true) {
+    if (eachscreen.hammer === true) {
+    // if (hammerMode === true) {
       logger("eachScreenHammerMode is true");
       getContainerElem().classList.add(
         constants.videoChat.mode.eachScreenAndHammerMode
@@ -567,7 +567,7 @@ function PortFolioVideoChatContainer({
     hammerTimerMap,
     partyMembers,
     // partyNo,
-    hammerMode,
+    eachscreen.hammer,
   ]); // partyMembers 파티 변할때 대비
 
   // //
@@ -730,7 +730,7 @@ function PortFolioVideoChatContainer({
                     {video_enabled.filter((elem) => elem === uid).length >
                     // 0 ? null : (
                     0 ? (
-                      <div id={`${uid}`} className="img-div">
+                      <div id={`${uid}`} className="img-div video-attached">
                         <div className="img-wrapper-div">
                           <img
                             // src={process.env.PUBLIC_URL + "/images/test2.jpg"}
