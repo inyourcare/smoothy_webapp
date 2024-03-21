@@ -16,13 +16,13 @@ import constants from "../../lib/common/constants";
 import logger from "../../lib/custom-logger/logger";
 import {
   YoutubePlayback,
-  changePlayback,
-  getCurrentUser,
+  getCurrentUser
 } from "../../lib/firebase";
 import { RootState } from "../../modules";
 import {
   AlertSeverityProvider,
   SET_ALERT_SNACKBAR,
+  SET_PLAYBACK,
   SET_PLAYLIST,
   SET_SELECTED_VIDEO,
 } from "../../modules/smoothy";
@@ -135,19 +135,23 @@ function YoutubeDrawer({ partyId, open, setOpen }: YoutubeDrawerProps) {
           } else {
             // 테스트 또는 로컬의 경우
             logger("[addVideoToPlaylist]locally add playlist", newPlayback);
-            dispatch({ type: SET_PLAYLIST, payload: [newPlayback] });
-            setVideos(
-              Array.from(
-                videos.concat({
-                  id: newPlayback.videoId,
-                  title: newPlayback.title,
-                  description: "no description",
-                  thumbnail: newPlayback.thumbnailUrl,
-                  // sender: newPlayback.sender
-                  sender: "yCwhjUn4Bpa0vEq12S3RHm4N50M2",
-                } as YoutubeVideoType)
-              )
-            );
+            newPlayback.control = constants.youtube.control.play
+            dispatch({
+              type: SET_PLAYLIST,
+              payload: playlist?.concat(newPlayback) || [newPlayback],
+            });
+            // setVideos(
+            //   Array.from(
+            //     videos.concat({
+            //       id: newPlayback.videoId,
+            //       title: newPlayback.title,
+            //       description: "no description",
+            //       thumbnail: newPlayback.thumbnailUrl,
+            //       // sender: newPlayback.sender
+            //       sender: "yCwhjUn4Bpa0vEq12S3RHm4N50M2",
+            //     } as YoutubeVideoType)
+            //   )
+            // );
           }
           setYoutubePlayNowOpen(true);
           setPlayNowDialogVideo({
@@ -175,14 +179,35 @@ function YoutubeDrawer({ partyId, open, setOpen }: YoutubeDrawerProps) {
         });
     },
     // }
-    [dispatch, videos]
+    [dispatch, playlist]
+  );
+
+  const changePlayback = useCallback(
+    (changes) => {
+      let update = sharedVideoPlayback;
+      if (changes.videoItem) {
+        update = {
+          videoListItemId: changes.videoItem,
+          ...changes,
+        };
+      } else {
+        update = {
+          ...changes,
+        };
+      }
+      dispatch({
+        type: SET_PLAYBACK,
+        payload: update as YoutubePlayback,
+      });
+    },
+    [dispatch, sharedVideoPlayback]
   );
 
   const selectVideoFromList = useCallback(
     (video: YoutubeVideoType) => {
       // 내가 영상을 바꾸는 동작
       // playback 을 변경해야함
-      if (partyId) {
+      // if (partyId) {
         const selected = playlist?.filter(
           (playItem) => playItem.videoId === video.id
         )[0];
@@ -192,20 +217,21 @@ function YoutubeDrawer({ partyId, open, setOpen }: YoutubeDrawerProps) {
           dispatch({ type: SET_SELECTED_VIDEO, payload: video });
           selected.control = constants.youtube.control.play;
           selected.position = 0;
-          changePlayback(partyId, {
+          // changePlayback(partyId, {
+          changePlayback({
             ...selected,
             control: constants.youtube.control.play,
             position: 0,
           });
         }
-      } else {
-        // local test
-        const selected = videos?.filter(
-          (playItem) => playItem.id === video.id
-        )[0];
-        dispatch({ type: SET_SELECTED_VIDEO, payload: selected });
-        // setSelectedVideo(selected);
-      }
+      // } else {
+      //   // local test
+      //   const selected = videos?.filter(
+      //     (playItem) => playItem.id === video.id
+      //   )[0];
+      //   dispatch({ type: SET_SELECTED_VIDEO, payload: selected });
+      //   // setSelectedVideo(selected);
+      // }
     },
     [dispatch, partyId, playlist, videos]
   );
@@ -237,7 +263,8 @@ function YoutubeDrawer({ partyId, open, setOpen }: YoutubeDrawerProps) {
   }, [dispatch, partyId, prevVideoId, sharedVideoPlayback]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const playlistEffect = useEffect(() => {
-    if (partyId && playlist) {
+    // if (partyId && playlist) {
+    if (playlist) {
       setVideos(
         playlist.map((playItem) => {
           return {
@@ -250,7 +277,8 @@ function YoutubeDrawer({ partyId, open, setOpen }: YoutubeDrawerProps) {
           } as YoutubeVideoType;
         })
       );
-    } else if (partyId && !playlist) {
+      // } else if (partyId && !playlist) {
+    } else {
       setVideos([]);
     }
   }, [playlist, partyId, videoChatUserProfiles]);
@@ -313,6 +341,7 @@ function YoutubeDrawer({ partyId, open, setOpen }: YoutubeDrawerProps) {
                       id="next-video-select-btn"
                       onClick={() => {
                         youtubeDeactivatedCallback();
+                        handleDialogOnClose();
                       }}
                       disabled={buttonDisable || loadingForAddVideoToPlaylist}
                       className={`${classes.root}`}
@@ -390,6 +419,7 @@ function YoutubeDrawer({ partyId, open, setOpen }: YoutubeDrawerProps) {
                       id="next-video-select-btn"
                       onClick={() => {
                         youtubeDeactivatedCallback();
+                        handleDialogOnClose();
                       }}
                       disabled={buttonDisable || loadingForAddVideoToPlaylist}
                       className={`${classes.root}`}

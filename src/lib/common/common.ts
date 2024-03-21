@@ -1,7 +1,7 @@
 import { Dispatch } from "react";
 import { store } from "../..";
 import { SmoothyUser } from "../../modules/firebase";
-import { CLEAR_SELECTED_VIDEO } from "../../modules/smoothy";
+import { CLEAR_PLAYBACK, CLEAR_PLAYLIST, CLEAR_SELECTED_VIDEO } from "../../modules/smoothy";
 import logger from "../custom-logger/logger";
 import {
   getCurrentUser,
@@ -159,5 +159,7 @@ export function youtubeDeactivatedCallback(){
     // removePlayback(partyNo);
     // removeItemsFromPlayList(partyNo);
     store.dispatch({ type: CLEAR_SELECTED_VIDEO });
+    store.dispatch({ type: CLEAR_PLAYLIST });
+    store.dispatch({ type: CLEAR_PLAYBACK });
   // }
 }

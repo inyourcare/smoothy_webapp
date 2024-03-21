@@ -584,7 +584,7 @@ function YoutubeVideoDetail({
   // 플레이백으로 player 제어하기 위한 effect
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const playerPlaybackEffect = useEffect(() => {
-    logger('playerPlaybackEffect',playerPlayback,player)
+    logger('playerPlaybackEffect',playerPlayback,player,prevVideoId,videoId)
     // 플레이어가 playerPlayback 에 제어받도록 만든다.
     // 클릭에 의한 변경과 무결하도록 만든다.
     // 영상의 position 관련해서는 sync 함수를 활용
