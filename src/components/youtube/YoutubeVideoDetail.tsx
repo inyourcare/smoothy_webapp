@@ -1,19 +1,37 @@
 // import { useSelector } from "react-redux";
 import { LinearProgress } from "@material-ui/core";
 import React, { DragEvent, useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import YouTube, { Options } from "react-youtube";
 import styled from "styled-components";
 import constants from "../../lib/common/constants";
 import logger from "../../lib/custom-logger/logger";
-import {
-  getCurrentUser,
-  setPlayback,
-  YoutubePlayback,
-  changePlayback,
-} from "../../lib/firebase";
+// import {
+//   getCurrentUser,
+//   setPlayback,
+//   YoutubePlayback,
+//   changePlayback,
+// } from "../../lib/firebase";
 import { RootState } from "../../modules";
+import { SET_PLAYBACK } from "../../modules/smoothy";
 // import { RootState } from "../../modules";
+
+type YoutubePlayback = {
+  control?: string;
+  height?: number;
+  lengthSeconds?: number;
+  position?: number;
+  provider?: string;
+  sendTimestamp?: number;
+  sender?: string;
+  thumbnailUrl?: string;
+  title?: string;
+  videoId?: string;
+  videoItem?: string;
+  width?: number;
+  category?: string;
+  keywords?: [];
+};
 
 const YoutubeDetailStyle = styled.div`
   /* border: 5px solid pink; */
@@ -200,6 +218,28 @@ function YoutubeVideoDetail({
   const [isPlayClicked, setIsPlayClicked] = useState(false);
   const [isPauseClicked, setIsPauseClicked] = useState(false);
   const [isDraggHappened, setIsDraggHappened] = useState(false);
+  const dispatch = useDispatch();
+
+  const changePlayback = useCallback(
+    (changes) => {
+      let update = sharedVideoPlayback;
+      if (changes.videoItem) {
+        update = {
+          videoListItemId: changes.videoItem,
+          ...changes,
+        };
+      } else {
+        update = {
+          ...changes,
+        };
+      }
+      dispatch({
+        type: SET_PLAYBACK,
+        payload: update as YoutubePlayback,
+      });
+    },
+    [dispatch, sharedVideoPlayback]
+  );
 
   const _onReady = useCallback((event: any) => {
     // access to player in all event handlers via event.target
@@ -461,6 +501,7 @@ function YoutubeVideoDetail({
   // 플레이백 세팅하기 위한 effect
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const playbackEffect = useEffect(() => {
+    logger('playerPlaybackEffect',sharedVideoPlayback,videoId,prevVideoId)
     // playerPlayback 은 어떤 경우에도 존재하도록 만든다. (Functions 에러가 있을 경우 제외)
     if (sharedVideoPlayback) {
       setPlayerPlayback(sharedVideoPlayback);
@@ -491,18 +532,28 @@ function YoutubeVideoDetail({
 
       // playlist 받으면서 VideoInfo 받기때문에 그냥 처리
       // 이 경우는 내가 처음 시작하는 경우만 해당
-      if (partyId && videoId && prevVideoId !== videoId) {
+      // if (partyId && videoId && prevVideoId !== videoId) {
+      // if (partyId && videoId && prevVideoId !== videoId) {
+      if ( videoId && prevVideoId !== videoId) {
         // 대화방 -> 내가 비디오를 먼저 shared 하려 한 경우
-
         const selectedList = playlist?.filter(
           (playItem) => playItem.videoId === videoId
         ) as YoutubePlayback[];
+        
+        logger("[playbackEffect]",selectedList);
         if (selectedList && selectedList.length > 0) {
-          const selected = selectedList[0]
+          const selected = selectedList[0];
           selected.control = constants.youtube.control.play;
           selected.position = 0;
           logger("[playbackEffect]shared player set", selected);
-          setPlayback(partyId as string, selected); // firebase db 쓰기
+          // setPlayback(partyId as string, selected); // firebase db 쓰기
+          dispatch({
+            type: SET_PLAYBACK,
+            payload: {
+              videoListItemId: selected.videoItem,
+              ...selected,
+            } as YoutubePlayback,
+          });
         }
       } else {
         // // 테스트 또는 로컬의 경우
@@ -520,6 +571,7 @@ function YoutubeVideoDetail({
     }
     // }
   }, [
+    dispatch,
     partyId,
     playlist,
     prevVideoId,
@@ -532,6 +584,7 @@ function YoutubeVideoDetail({
   // 플레이백으로 player 제어하기 위한 effect
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const playerPlaybackEffect = useEffect(() => {
+    logger('playerPlaybackEffect',playerPlayback,player)
     // 플레이어가 playerPlayback 에 제어받도록 만든다.
     // 클릭에 의한 변경과 무결하도록 만든다.
     // 영상의 position 관련해서는 sync 함수를 활용
@@ -558,7 +611,7 @@ function YoutubeVideoDetail({
         // 영상이 변경되지 않았을 때
         // 포지션 변경이 일어났는지 먼저 체크
         if (
-          playerPlayback.sender !== getCurrentUser()?.uid &&
+          // playerPlayback.sender !== getCurrentUser()?.uid &&
           playerPlayback.position !== prevPosition
         ) {
           // 다른 유저가 db 업데이트시 prevPosition 값을 등록한다.
@@ -581,21 +634,25 @@ function YoutubeVideoDetail({
         // 내가 플레이어를 변경한 경우 isPlayPauseChanged isDraggHappened
         if (isDraggHappened) {
           const newPosition = getProgressNowPosition();
-          if (partyId) changePlayback(partyId, { position: newPosition });
+          // if (partyId) changePlayback(partyId, { position: newPosition });
+          // if (partyId) changePlayback({ position: newPosition });
+          changePlayback({ position: newPosition });
           setIsDraggHappened(false);
         }
         if (isPlayClicked) {
-          if (partyId)
-            changePlayback(partyId, {
-              control: constants.youtube.control.play,
-            });
+          // if (partyId)
+          // changePlayback(partyId, {
+          changePlayback({
+            control: constants.youtube.control.play,
+          });
           setIsPlayClicked(false);
         }
         if (isPauseClicked) {
-          if (partyId)
-            changePlayback(partyId, {
-              control: constants.youtube.control.pause,
-            });
+          // if (partyId)
+          // changePlayback(partyId, {
+          changePlayback({
+            control: constants.youtube.control.pause,
+          });
           setIsPauseClicked(false);
         }
 
@@ -637,6 +694,7 @@ function YoutubeVideoDetail({
     prevVideoId,
     progressTimer,
     syncProgress,
+    changePlayback,
   ]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

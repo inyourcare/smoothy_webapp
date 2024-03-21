@@ -23,6 +23,7 @@ import { RootState } from "../../modules";
 import {
   AlertSeverityProvider,
   SET_ALERT_SNACKBAR,
+  SET_PLAYLIST,
   SET_SELECTED_VIDEO,
 } from "../../modules/smoothy";
 import { useStyles } from "../common/CustomStyle";
@@ -134,6 +135,7 @@ function YoutubeDrawer({ partyId, open, setOpen }: YoutubeDrawerProps) {
           } else {
             // 테스트 또는 로컬의 경우
             logger("[addVideoToPlaylist]locally add playlist", newPlayback);
+            dispatch({ type: SET_PLAYLIST, payload: [newPlayback] });
             setVideos(
               Array.from(
                 videos.concat({
