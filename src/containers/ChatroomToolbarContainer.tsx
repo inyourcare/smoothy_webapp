@@ -297,9 +297,10 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
   }, [dispatch, eachscreen.hammer]);
 
   const toggleYoutubeMode = useCallback(() => {
+    logger('toggleYoutubeMode')
     // if (roomConnected && partyNo) {
     if (reactionActivated) {
-      setYoutubeDialogOpen(!youtubeDialogOpen);
+          setYoutubeDialogOpen(!youtubeDialogOpen);
       // if (youtubeMode === true) {
       //   logger("EffectButtonSpace deactivate");
       //   dispatch({ type: DEACTIVATE_YOUTUBE, payload: partyNo });
@@ -310,13 +311,14 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
       // }
       // } else alert("통화중이 아닙니다.");
     }
-    dispatch({
-      type: SET_ALERT_SNACKBAR,
-      payload: {
-        severity: AlertSeverityProvider.error,
-        alertMessage: `통화중이 아닙니다.`,
-      },
-    });
+    else
+      dispatch({
+        type: SET_ALERT_SNACKBAR,
+        payload: {
+          severity: AlertSeverityProvider.error,
+          alertMessage: `통화중이 아닙니다.`,
+        },
+      });
   }, [dispatch, reactionActivated, youtubeDialogOpen]);
 
   // const youtubeDeactivatedCallback = useCallback(() => {
@@ -494,9 +496,10 @@ function ChatroomToolbar({ setOnBeforeUnload }: ChatroomToolbarProps) {
 
   return (
     <ChatroomToolbarStyle>
-      {partyNo && (
+      {/* {partyNo && ( */}
+      {true && (
         <YoutubueView
-          partyId={partyNo}
+          // partyId={partyNo}
           open={youtubeDialogOpen}
           setOpen={setYoutubeDialogOpen}
         />

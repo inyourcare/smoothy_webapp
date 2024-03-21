@@ -132,7 +132,7 @@ const SmoothyVideoFrameLayout = styled.div`
 const PortfolioTestButtonSpaceStyle = styled.div`
   .effect-space {
     position: absolute;
-    left: 10px;
+    left: 300px;
     top: 10px;
     z-index: ${constants.smoothy.zidx.btn};
     /* display: none; */
@@ -172,7 +172,7 @@ function PortFolioVideoChatContainer({
     youtube,
     eachscreen,
     pingListMap,
-    // youtubeVideoDivWidthHeight,
+    youtubeVideoDivWidthHeight,
   } = useSelector((state: RootState) => state.smoothy);
   // const { partyNo, sender, chatlink } =
   //   twilioVideoChatProps as TwilioVideoChatProps;
@@ -181,10 +181,10 @@ function PortFolioVideoChatContainer({
   const [portfolioTestActivated, setPortfolioTestActivated] = useState(false);
   // const [hammerMode, setHammerMode] = useState(false);
   const [youtubeMode, setYoutubeMode] = useState(false);
-  const [youtubeVideoDivWidthHeight, setYoutubeVideoDivWidthHeight] = useState({
-    width: 0,
-    height: 0,
-  });
+  // const [youtubeVideoDivWidthHeight, setYoutubeVideoDivWidthHeight] = useState({
+  //   width: 0,
+  //   height: 0,
+  // });
   const [video_enabled, setVideo_enabled] = useState(["__quniqueId__1"]);
   const [actualUsers, setActualUsers] = useState(["__quniqueId__1", "__quniqueId__2", "__quniqueId__3"]);
   const [userProfiles, setUserProfiles] = useState(
@@ -613,8 +613,8 @@ function PortFolioVideoChatContainer({
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const youtubeSelectedEffect = useEffect(() => {
-    // if (youtube.selectedVideo) {
-    if (false) {
+    if (youtube.selectedVideo) {
+    // if (false) {
       // setYoutubeVideoDivHeight(50);
       dispatch({
         type: SET_YOUTUBE_DIV_WITH_HEIGHT,
@@ -627,7 +627,7 @@ function PortFolioVideoChatContainer({
         payload: { width: 0, height: 0 },
       });
     }
-  }, [dispatch]);
+  }, [dispatch, youtube.selectedVideo]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const userDeviceChangedEffect = useEffect(() => {
@@ -672,11 +672,12 @@ function PortFolioVideoChatContainer({
                 }}
               >
                 {/* {partyNo && youtube.selectedVideo && ( */}
-                {youtubeMode && (
+                {youtube.selectedVideo && (
+                // {youtubeMode && (
                   <YoutubeVideoDetail
-                    videoId={""}
-                    title={"videotitle here"}
-                    description={"video description here"}
+                    videoId={youtube.selectedVideo.id}
+                    title={youtube.selectedVideo.title}
+                    description={youtube.selectedVideo.description}
                     // _onReady={onReadyForYTDetail}
                     // _onEnd={onEndForYTDetail}
                     // _onStateChange={onStateChangeForYTDetail}
@@ -895,6 +896,14 @@ function PortFolioVideoChatContainer({
                 >
                   connected 8
                 </button>
+                {/* <button
+                  className="btn"
+                  onClick={(e) =>
+                    dispatch()
+                  }
+                >
+                  youtube
+                </button> */}
               </div>
             )}
           </div>

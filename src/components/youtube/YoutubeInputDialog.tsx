@@ -1,18 +1,17 @@
-import { useCallback } from "react";
-import styled from "styled-components";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography,
   TextField,
+  Typography,
 } from "@material-ui/core";
-import logger from "../../lib/custom-logger/logger";
-import { getYoutubeVideoInfoOembed } from "../../lib/api/posts";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
+import styled from "styled-components";
+import { getYoutubeVideoInfoOembed } from "../../lib/api/posts";
+import logger from "../../lib/custom-logger/logger";
 import { RootState } from "../../modules";
 import { useStyles } from "../common/CustomStyle";
 
@@ -81,7 +80,7 @@ function YoutubeInputDialog({
           </div>
           {isValidUrl && videoData ? (
             <>
-              <img alt="thumbnail" src={videoData.thumbnail_url} />
+              <img alt="thumbnail" src={videoData.thumbnailUrl} />
               <Typography
                 variant="subtitle1"
                 color="textPrimary"

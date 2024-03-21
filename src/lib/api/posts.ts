@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import logger from "../custom-logger/logger";
+import { parseYoutubeVideoId } from "../util/parsingUtil";
 // import constants from '../common/constants';
 // import logger from '../custom-logger/logger';
 // import { getCurrentUser } from '../firebase';
@@ -152,7 +153,16 @@ export const getYoutubeVideoInfoOembed = async (videoUrl: string) => {
   return axios(config as AxiosRequestConfig)
     .then(function (res) {
       logger("[getYoutubeHtml] post res come successfully", res.data);
-      if (res.data) return res.data;
+      // if (res.data) return res.data;
+      if (res.data) return {
+        control: '',
+        height: res.data.height,
+        provider: res.data.author_name,
+        thumbnailUrl: res.data.thumbnail_url,
+        title: res.data.title,
+        videoId: parseYoutubeVideoId(videoUrl),
+        width: res.data.width,
+      };
       else {
         console.error("[getYoutubeHtml] functions fail::", res);
         throw new Error("[getYoutubeHtml] res has no data");

@@ -1,31 +1,35 @@
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import constants from "../../lib/common/constants";
-import { RootState } from "../../modules";
 import {
+  Button,
   Drawer,
   List,
   ListItem,
   ListItemIcon,
   Typography,
-  Button,
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import YoutubeVideoList from "./YoutubeVideoList";
-import YoutubeInputDialog from "./YoutubeInputDialog";
-import YoutubePlayNowDialog from "./YoutubePlayNowDialog";
-import { YoutubeVideoType } from "./types";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import { getYoutubeVideoInfoOembed } from "../../lib/api/posts";
+import { youtubeDeactivatedCallback } from "../../lib/common/common";
+import constants from "../../lib/common/constants";
 import logger from "../../lib/custom-logger/logger";
 import {
-  changePlayback,
-  getYoutubeVideoInfo,
   YoutubePlayback,
-  addVideoToPlayList as addVideoToPlayListFirestore,
+  changePlayback,
   getCurrentUser,
 } from "../../lib/firebase";
-import { AlertSeverityProvider, SET_ALERT_SNACKBAR, SET_SELECTED_VIDEO } from "../../modules/smoothy";
+import { RootState } from "../../modules";
+import {
+  AlertSeverityProvider,
+  SET_ALERT_SNACKBAR,
+  SET_SELECTED_VIDEO,
+} from "../../modules/smoothy";
 import { useStyles } from "../common/CustomStyle";
+import YoutubeInputDialog from "./YoutubeInputDialog";
+import YoutubePlayNowDialog from "./YoutubePlayNowDialog";
+import YoutubeVideoList from "./YoutubeVideoList";
+import { YoutubeVideoType } from "./types";
 
 const YoutubeDrawerStyle = styled.div`
   .inner-drawer-container-div {
@@ -73,13 +77,13 @@ const YoutubeDrawerStyle = styled.div`
   }
 `;
 type YoutubeDrawerProps = {
-  open:boolean;
-  setOpen:(o:boolean)=>void;
+  open: boolean;
+  setOpen: (o: boolean) => void;
   partyId?: string;
 };
 // eslint-disable-next-line no-empty-pattern
-function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
-  const classes = useStyles()
+function YoutubeDrawer({ partyId, open, setOpen }: YoutubeDrawerProps) {
+  const classes = useStyles();
   const anchor = "left";
   // const [drawerOpen, setDrawerOpen] = useState(false);
   // const classes = useStyles();
@@ -99,7 +103,9 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
   // } as YoutubeVideoType);
   const [youtubeInputOpen, setYoutubeInputOpen] = useState(false);
   const [youtubePlayNowOpen, setYoutubePlayNowOpen] = useState(false);
-  const [playNowDialogVideo, setPlayNowDialogVideo] = useState(undefined as unknown as YoutubeVideoType);
+  const [playNowDialogVideo, setPlayNowDialogVideo] = useState(
+    undefined as unknown as YoutubeVideoType
+  );
   const [loadingForAddVideoToPlaylist, setLoadingForAddVideoToPlaylist] =
     useState(false);
 
@@ -112,17 +118,19 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
       logger("[addVideoToPlaylist] link::", url);
       // if (linkParsed.length >= 2 && linkParsed[1]) {
       // getYoutubeVideoInfo(linkParsed[1].split("&")[0])
-      getYoutubeVideoInfo(url)
+      // getYoutubeVideoInfo(url)
+      getYoutubeVideoInfoOembed(url)
         .then(async function (data) {
           var newPlayback = data as YoutubePlayback;
           logger("[addVideoToPlaylist]newPlayback->", newPlayback);
           // newPlayback.control = constants.youtube.control.play
           // newPlayback.sender = getCurrentUser()?.uid as string
           // newPlayback.sendTimestamp = await getServerTime()
-          if (partyId) {
+          // if (partyId) {
+          if (false) {
             // 대화방 -> 내가 비디오를 먼저 shared 하려 한 경우
             logger("[addVideoToPlaylist]shared add playlist", newPlayback);
-            addVideoToPlayListFirestore(partyId, newPlayback);
+            // addVideoToPlayListFirestore(partyId, newPlayback);
           } else {
             // 테스트 또는 로컬의 경우
             logger("[addVideoToPlaylist]locally add playlist", newPlayback);
@@ -134,20 +142,20 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
                   description: "no description",
                   thumbnail: newPlayback.thumbnailUrl,
                   // sender: newPlayback.sender
-                  sender: "yCwhjUn4Bpa0vEq12S3RHm4N50M2"
+                  sender: "yCwhjUn4Bpa0vEq12S3RHm4N50M2",
                 } as YoutubeVideoType)
               )
             );
           }
-          setYoutubePlayNowOpen(true)
+          setYoutubePlayNowOpen(true);
           setPlayNowDialogVideo({
             id: newPlayback.videoId,
             title: newPlayback.title,
             description: "no description",
             thumbnail: newPlayback.thumbnailUrl,
             // sender: newPlayback.sender
-            sender: getCurrentUser()?.uid
-          } as YoutubeVideoType)
+            sender: getCurrentUser()?.uid,
+          } as YoutubeVideoType);
         })
         .catch(function (err) {
           logger("[addVideoToPlaylist]error::", err);
@@ -165,7 +173,7 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
         });
     },
     // }
-    [dispatch, partyId, videos]
+    [dispatch, videos]
   );
 
   const selectVideoFromList = useCallback(
@@ -179,7 +187,7 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
         if (selected) {
           logger("[selectVideoFromList] change selected ", selected);
           // setSelectedVideo(video);
-          dispatch({type:SET_SELECTED_VIDEO,payload:video})
+          dispatch({ type: SET_SELECTED_VIDEO, payload: video });
           selected.control = constants.youtube.control.play;
           selected.position = 0;
           changePlayback(partyId, {
@@ -193,48 +201,57 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
         const selected = videos?.filter(
           (playItem) => playItem.id === video.id
         )[0];
-        dispatch({type:SET_SELECTED_VIDEO,payload:selected})
+        dispatch({ type: SET_SELECTED_VIDEO, payload: selected });
         // setSelectedVideo(selected);
       }
     },
     [dispatch, partyId, playlist, videos]
   );
-  const handleDialogOnClose = useCallback(()=>{
-    setOpen(false)
-  },[setOpen])
+  const handleDialogOnClose = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const youtubeActivateDetectEffect = useEffect(() => {
-    if (partyId && sharedVideoPlayback && prevVideoId !== sharedVideoPlayback?.videoId) {
+    if (
+      partyId &&
+      sharedVideoPlayback &&
+      prevVideoId !== sharedVideoPlayback?.videoId
+    ) {
       // shared 가 있고 prev 아이디가 shared 의 videoId 와 다르다 => 상대가 또는 내가 유튜브를 시작했거나 영상을 바꿨다.
       // setSelectedVideo({
       //   id: sharedVideoPlayback.videoId as string,
       //   title: sharedVideoPlayback.title,
       // });
-      dispatch({type:SET_SELECTED_VIDEO,payload:{
-        id: sharedVideoPlayback.videoId as string,
-        title: sharedVideoPlayback.title,
-      }})
+      dispatch({
+        type: SET_SELECTED_VIDEO,
+        payload: {
+          id: sharedVideoPlayback.videoId as string,
+          title: sharedVideoPlayback.title,
+        },
+      });
       setPrevVideoId(sharedVideoPlayback.videoId as string);
     }
   }, [dispatch, partyId, prevVideoId, sharedVideoPlayback]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const playlistEffect = useEffect(()=>{
+  const playlistEffect = useEffect(() => {
     if (partyId && playlist) {
-      setVideos(playlist.map((playItem)=>{
-        return {
-          id: playItem.videoId,
-          title: playItem.title,
-          description: "no description",
-          thumbnail: playItem.thumbnailUrl,
-          sender:playItem.sender,
-          senderProfile:videoChatUserProfiles.get(playItem.sender as string)
-        } as YoutubeVideoType
-      }))
-    } else if (partyId && !playlist){
-      setVideos([])
+      setVideos(
+        playlist.map((playItem) => {
+          return {
+            id: playItem.videoId,
+            title: playItem.title,
+            description: "no description",
+            thumbnail: playItem.thumbnailUrl,
+            sender: playItem.sender,
+            senderProfile: videoChatUserProfiles.get(playItem.sender as string),
+          } as YoutubeVideoType;
+        })
+      );
+    } else if (partyId && !playlist) {
+      setVideos([]);
     }
-  },[playlist, partyId, videoChatUserProfiles])
+  }, [playlist, partyId, videoChatUserProfiles]);
   return (
     <YoutubeDrawerStyle>
       <Drawer
@@ -254,7 +271,8 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
                     <ArrowBackIosIcon
                       // onClick={() => dispatch({ type: DEACTIVATE_YOUTUBE })}
                       onClick={handleDialogOnClose}
-                      style={{ backgroundColor: "skyblue", cursor: "pointer" }}
+                      // style={{ backgroundColor: "skyblue", cursor: "pointer" }}
+                      style={{ cursor: "pointer" }}
                     />
                     {/* <ListItemText primary={"설정"} /> */}
                   </ListItemIcon>
@@ -267,14 +285,14 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
                   videos={videos}
                 />
               </List>
-              
+
               <div className="next-video-select-btn-div">
-              {loadingForAddVideoToPlaylist ? (
+                {loadingForAddVideoToPlaylist ? (
                   <Typography align="center" noWrap>
                     영상을 파싱하는 중...
                   </Typography>
-              ) : (
-                <>
+                ) : (
+                  <>
                     <Button
                       id="next-video-select-btn"
                       onClick={() => {
@@ -288,8 +306,22 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
                         다음 영상 고르기
                       </Typography>
                     </Button>
-                </>
-              )}
+
+                    <Button
+                      id="next-video-select-btn"
+                      onClick={() => {
+                        youtubeDeactivatedCallback();
+                      }}
+                      disabled={buttonDisable || loadingForAddVideoToPlaylist}
+                      className={`${classes.root}`}
+                      variant="contained"
+                    >
+                      <Typography align="center" noWrap>
+                        워치파티 종료
+                      </Typography>
+                    </Button>
+                  </>
+                )}
               </div>
             </>
           ) : (
@@ -301,7 +333,8 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
                     <ArrowBackIosIcon
                       // onClick={() => dispatch({ type: DEACTIVATE_YOUTUBE })}
                       onClick={handleDialogOnClose}
-                      style={{ backgroundColor: "skyblue", cursor: "pointer" }}
+                      // style={{ backgroundColor: "skyblue", cursor: "pointer" }}
+                      style={{ cursor: "pointer" }}
                     />
                     {/* <ListItemText primary={"설정"} /> */}
                   </ListItemIcon>
@@ -311,7 +344,9 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
                 <div className="watch-party-not-started-main-div">
                   <div className="watch-party-not-started-img-div">
                     <img
-                      src={constants.smoothy.images.youtubue.watchPartySmoothyMon}
+                      src={
+                        constants.smoothy.images.youtubue.watchPartySmoothyMon
+                      }
                       alt="sample img"
                       id="watch-party-not-started-main-img"
                     />
@@ -346,6 +381,20 @@ function YoutubeDrawer({ partyId,open,setOpen }: YoutubeDrawerProps) {
                     >
                       <Typography align="center" noWrap>
                         다음 영상 고르기
+                      </Typography>
+                    </Button>
+
+                    <Button
+                      id="next-video-select-btn"
+                      onClick={() => {
+                        youtubeDeactivatedCallback();
+                      }}
+                      disabled={buttonDisable || loadingForAddVideoToPlaylist}
+                      className={`${classes.root}`}
+                      variant="contained"
+                    >
+                      <Typography align="center" noWrap>
+                        워치파티 종료
                       </Typography>
                     </Button>
                   </>
