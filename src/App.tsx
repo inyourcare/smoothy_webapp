@@ -458,8 +458,8 @@ function App() {
             </Link>
           </>
         ) : null}
-        {/* {user && syncronized && !testMode ? ( */}
-        {true ? (
+        {user && syncronized && !testMode ? (
+        // {true ? (
           <>
             {/* <AppDrawer profile={currentProfile} /> */}
             <AppDrawer />
