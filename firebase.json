@@ -1,6 +1,5 @@
 {
-  "hosting": [{
-    "target": "smoothy-build",
+  "hosting": {
     "public": "build",
     "ignore": [
       "firebase.json",
@@ -9,9 +8,9 @@
     ],
     "rewrites": [
       {
-        "source": "/redirected/**",
+        "source": "**",
         "destination": "/index.html"
       }
     ]
-  }]
+  }
 }
